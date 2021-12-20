@@ -21,7 +21,7 @@ public String http() {
 }
 ```
 
-借助`@Download`注解，你可以把被下载的资源写在注解的`source`参数中或者作为方法的返回值`@return`
+借助`@Download`注解，你可以把被下载的资源写在注解的`source`参数中或者作为方法的返回值`return`
 
 两者没有任何区别，只是返回值支持动态的对象
 
@@ -45,13 +45,25 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 
 模块：
 
-- concept-download-core(核心模块)
-- concept-download-aop(切面模块)
-- concept-download-web-servlet(`Servlet`支持模块，`Webflux`暂未支持，如有需要再加)
-- concept-download-source-classpath(`ClassPathResource`支持)
-- concept-download-source-okhttp(基于`OkHttp`的HTTP资源支持)
-- concept-download-load-coroutines(基于`Kotlin`协程的I/O请求支持)
-- concept-download-spring-boot-starter(`SpringBoot`自动配置模块，包含部分模块)
+- concept-download-core (核心模块)
+- concept-download-aop (切面模块)
+- concept-download-web-servlet (`Servlet`支持模块，`Webflux`暂未支持，如有需要再加)
+- concept-download-source-classpath (`ClassPathResource`支持)
+- concept-download-source-okhttp (基于`OkHttp`的HTTP资源支持)
+- concept-download-load-coroutines (基于`Kotlin`协程的I/O请求支持)
+- concept-download-spring-boot-starter (`SpringBoot`自动配置模块，包含部分模块)
+
+### `@Download` 注解说明
+
+- `@Download(source = {})` 需要下载的内容，但是优先级低于返回值，如果方法返回值不为`null`则会使用返回值作为下载的内容
+- `@Download(inline = false)` 如果为`true`，可以直接在浏览器预览，需要配合`contentType`，如图片或视频，默认`false`
+- `@Download(filename = "")` 指定下载的文件名，如果不指定则会获取下载内容的名称，如文件则使用文件名
+- `@Download(contentType = "")` 默认`application/octet-stream`
+- `@Download(compressFormat = "")` 压缩格式，默认`zip`
+- `@Download(forceCompress = false)` 强制压缩，当下载的对象只有一个时默认不压缩，如果为true，则也压缩
+- `@Download(charset = "")` 如果下载包含中文的文本文件出现乱码，可以尝试指定编码
+- `@Download(headers = {})` 统一的响应头，每2个为一组
+- `@Download(extra = "")` 额外的数据，当需要自行编写额外流程业务时可能会用到
 
 ### 支持的下载类型
 
