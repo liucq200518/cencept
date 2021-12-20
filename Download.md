@@ -54,3 +54,16 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 - concept-download-spring-boot-starter(SpringBoot自动配置模块，包含部分模块)
 
 ### 支持的下载类型
+
+|类型|匹配|实现类|位置|依赖｜
+|-|-|-|-|-|
+|文件|"file:"前缀的字符串||注解参数或返回值||
+|文件|File对象||返回值||
+|user.home目录下的文件|"user.home:","user-home:","user_home:"前缀的字符串||注解参数或返回值||
+|classpath目录下的资源|"classpath:"前缀的字符串||注解参数或返回值||
+|classpath目录下的资源|ClassPathResource对象||返回值||
+|文本文件|任意的String对象||注解参数或返回值||
+|输入流|InputStream对象||返回值||
+|HTTP资源|http或https的url字符串||注解参数或返回值||
+
+同时支持上述类型任意组合的数组或集合
