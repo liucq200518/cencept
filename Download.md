@@ -21,7 +21,7 @@ public String http() {
 }
 ```
 
-借助`@Download`注解，你可以把被下载的资源写在注解的`source`参数中或者作为方法的返回值
+借助`@Download`注解，你可以把被下载的资源写在注解的`source`参数中或者作为方法的返回值`@return`
 
 两者没有任何区别，只是返回值支持动态的对象
 
@@ -45,25 +45,34 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 
 模块：
 
-- concept-download-core(核模块)
+- concept-download-core(核心模块)
 - concept-download-aop(切面模块)
-- concept-download-web-servlet(Servlet支持模块，Webflux暂未支持，如有需要再加)
-- concept-download-source-classpath(ClassPathResource支持)
-- concept-download-source-okhttp(基于OkHttp的HTTP资源支持)
-- concept-download-load-coroutines(基于Kotlin协程的I/O请求支持)
-- concept-download-spring-boot-starter(SpringBoot自动配置模块，包含部分模块)
+- concept-download-web-servlet(`Servlet`支持模块，`Webflux`暂未支持，如有需要再加)
+- concept-download-source-classpath(`ClassPathResource`支持)
+- concept-download-source-okhttp(基于`OkHttp`的HTTP资源支持)
+- concept-download-load-coroutines(基于`Kotlin`协程的I/O请求支持)
+- concept-download-spring-boot-starter(`SpringBoot`自动配置模块，包含部分模块)
 
 ### 支持的下载类型
 
-|类型|匹配|实现类|位置|依赖｜
-|-|-|-|-|-|
-|文件|"file:"前缀的字符串||注解参数或返回值||
-|文件|File对象||返回值||
-|user.home目录下的文件|"user.home:","user-home:","user_home:"前缀的字符串||注解参数或返回值||
-|classpath目录下的资源|"classpath:"前缀的字符串||注解参数或返回值||
-|classpath目录下的资源|ClassPathResource对象||返回值||
-|文本文件|任意的String对象||注解参数或返回值||
-|输入流|InputStream对象||返回值||
-|HTTP资源|http或https的url字符串||注解参数或返回值||
+##### 默认支持
 
-同时支持上述类型任意组合的数组或集合
+|类型|匹配|实现类|位置|依赖|
+|-|-|-|-|-|
+|文件|"file:"前缀的字符串||注解参数<br/>返回值||
+|文件|`File`对象||返回值||
+|user.home目录下的文件|"user.home:","user-home:","user_home:"前缀的字符串||注解参数<br/>返回值||
+|classpath目录下的资源|"classpath:"前缀的字符串||注解参数<br/>返回值|source-classpath模块|
+|classpath目录下的资源|`ClassPathResource`对象||返回值|source-classpath模块|
+|文本文件|任意的String对象||注解参数<br/>返回值||
+|输入流|`InputStream`对象||返回值||
+|HTTP资源|http或https的url字符串||注解参数<br/>返回值|source-okhttp模块|
+
+**同时支持上述类型任意组合的数组或集合**
+
+##### 自定义支持
+
+实现`SourceFactory`来自定义支持任意的类型和对象
+
+### 网络资源的并发处理
+
