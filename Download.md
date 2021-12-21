@@ -88,7 +88,26 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 - `@Download(extra = "")`
   - 额外的数据，当需要自行编写额外流程业务时可能会用到
 
+### 整体流程
+
+整个下载流程由`DownloadHandler`和`DownloadHandlerChain`实现链式处理
+
+- `InitializeContextHandler`
+  - 初始化下载上下文
+- `CreateSourceHandler`
+  - 解析适配各种类型的下载数据
+- `LoadSourceHandler`
+  - 针对一些网络资源或需要耗时处理的资源提前加载
+- `CompressSourceHandler`
+  - 压缩处理
+- `WriteResponseHandler`
+  - 写入响应
+- `DestroyContextHandler`
+  - 销毁下载上下文
+
 ### 支持的下载类型
+
+所有的下载对象最终都会通过`Source`体现，作为原始的下载数据的抽象
 
 ##### 默认支持
 
@@ -123,4 +142,77 @@ public List<Object> list() {
 
 ### 网络资源的并发处理
 
-针对一些网络资源，如HTTP、FTP等，需要进行并发的加载，所以提供了一些现成的加载方式
+针对一些网络资源，如HTTP、FTP等，需要进行并发的加载，通过`SourceLoaderInvoker`来实现
+
+|类型|实现类|说明|依赖|
+|-|-|-|-|
+|串行|`SerialSourceLoaderInvoker`|按顺序加载，适用于本地文件||
+|线程池|`ExecutorSourceLoaderInvoker`|依赖线程池加载，适合网络资源||
+|协程|`CoroutinesSourceLoaderInvoker`|依赖协程加载，适合网络资源|`load-coroutines`|
+
+每个`Source`都可以单独指定`asyncLoad`属性来控制是否需要异步加载，目前`OkHttpSource`默认为`true`，其他默认都为`false`
+
+### 网络资源的缓存处理
+
+##### 配置文件
+
+```yaml
+concept:
+  download:
+    source:
+      cache:
+        enabled: true //是否启用
+        path: / //缓存目录
+        delete: false //下载结束后是否删除
+```
+
+##### 代码全局配置
+
+```java
+@Configuration
+public class ConceptDownloadConfig {
+
+    @Bean
+    public DownloadConfigurer downloadConfigurer() {
+        return new DownloadConfigurer() {
+            @Override
+            public void configure(DownloadConfiguration configuration) {
+                System.out.println("可以在这里设置或覆盖配置文件的配置！");
+                configuration.getSource().getCache().setEnabled(true);
+                configuration.getSource().getCache().setPath("/");
+                configuration.getSource().getCache().setDelete(false);
+            }
+        };
+    }
+}
+```
+
+##### 注解配置单个方法
+
+```java
+@Download(filename = "压缩包.zip")
+@SourceCache(group = "source")
+@GetMapping("/source-cache")
+public String[] sourceCache() {
+    return new String[]{
+          "http://127.0.0.1:8080/concept-download/text.txt",
+          "http://127.0.0.1:8080/concept-download/image.jpg",
+          "http://127.0.0.1:8080/concept-download/video.mp4"
+    };
+}
+```
+
+使用`@SourceCache`注解配合`@Download`实现下载资源的缓存处理
+
+##### `@SourceCache` 注解说明
+
+- `@SourceCache(enabled = true)`
+  - 是否启用缓存
+- `@SourceCache(group = "")`
+  - 分组，会在缓存目录下额外创建一个对应的目录作为实际的缓存目录
+  - 考虑到不同功能出现相同名称的文件等冲突问题
+  - 默认空，不创建，及直接使用配置的缓存目录
+- `@SourceCache(delete = false)`
+  - 下载结束后是否删除缓存文件
+
+### 资源压缩
