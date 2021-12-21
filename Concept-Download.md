@@ -118,9 +118,9 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 |user.home目录下的文件|"user.home:","user-home:","user_home:"前缀的字符串|`FileSource`|`UserHomeSourceFactory`|`user.home:/Public/README.txt`||
 |classpath目录下的资源|"classpath:"前缀的字符串|`ClassPathResourceSource`|`ClassPathPrefixSourceFactory`|`classpath:/download/README.txt`|`source-classpath`|
 |classpath目录下的资源|`ClassPathResource`对象|`ClassPathResourceSource`|`ClassPathResourceSourceFactory`|`new ClassPathResource("/download/README.txt")`|`source-classpath`|
-|文本文件|任意的String对象|`TextSource`|`TextSourceFactory`|"任意的文本将会直接作为文本文件处理""||
+|文本文件|任意的String对象|`TextSource`|`TextSourceFactory`|"任意的文本将会直接作为文本文件处理"||
 |输入流|`InputStream`对象|`InputStreamSource`|`InputStreamSourceFactory`|任意的输入流||
-|HTTP资源|http或https的url字符串|`OkHttpSource`|`OkHttpSourceFactory`|"http://127.0.0.1:8080/concept-download/image.jpg"|`source-okhttp`|
+|HTTP资源|http或https的url字符串|`OkHttpSource`|`OkHttpSourceFactory`|http://127.0.0.1:8080/concept-download/image.jpg|`source-okhttp`|
 
 **同时支持上述类型任意组合的数组或集合**
 
@@ -140,6 +140,33 @@ public List<Object> list() {
 
 实现`SourceFactory`来自定义支持任意的类型和对象
 
+```java
+/**
+ * 数据源工厂 / Factory of download source
+ */
+public interface SourceFactory extends OrderProvider {
+
+    /**
+     * 是否支持某个对象 / Whether an object is supported
+     *
+     * @param source  需要下载的数据对象 / Object to download
+     * @param context 下载上下文 / Context of download
+     * @return 是否支持 / If supported
+     */
+    boolean support(Object source, DownloadContext context);
+
+    /**
+     * 创建 / Create
+     *
+     * @param source  需要下载的数据对象 / Object to download
+     * @param context 下载上下文 / Context of download
+     * @return 下载源 / Source
+     */
+    Source create(Object source, DownloadContext context);
+}
+
+```
+
 ### 网络资源的并发处理
 
 针对一些网络资源，如HTTP、FTP等，需要进行并发的加载，通过`SourceLoaderInvoker`来实现
@@ -151,6 +178,89 @@ public List<Object> list() {
 |协程|`CoroutinesSourceLoaderInvoker`|依赖协程加载，适合网络资源|`load-coroutines`|
 
 每个`Source`都可以单独指定`asyncLoad`属性来控制是否需要异步加载，目前`OkHttpSource`默认为`true`，其他默认都为`false`
+
+通过手动注入来切换不同的加载方式
+
+```java
+@Configuration
+public class ConceptDownloadConfig {
+
+    @Bean
+    public CoroutinesSourceLoaderInvoker coroutinesSourceLoaderInvoker() {
+        System.out.println("如果需要进行HTTP请求可以使用协程加载！");
+        return new CoroutinesSourceLoaderInvoker();
+    }
+
+    //或者
+
+    @Bean(destroyMethod = "shutdown")
+    public ExecutorSourceLoaderInvoker executorSourceLoaderInvoker() {
+        System.out.println("如果需要进行HTTP请求可以使用线程池加载！");
+        return new ExecutorSourceLoaderInvoker(Executors.newFixedThreadPool(5));
+    }
+}
+
+```
+
+##### 异常处理
+
+默认实现为`RethrowLoadedSourceLoadExceptionHandler`将在加载结束时进行异常判断
+
+可以自定义实现`SourceLoadExceptionHandler`
+
+```java
+/**
+ * 下载源加载的异常处理器 / Handler to handle exception when source loading
+ */
+public interface SourceLoadExceptionHandler {
+
+    /**
+     * 每个异常都会回调 / Each exception will be called back
+     * 可能是在线程池中的某个线程中回调 / It may be a callback in a thread in the thread pool
+     *
+     * @param e 异常 / exception
+     */
+    void onLoading(SourceLoadException e);
+
+    /**
+     * 加载结束后，如果有异常将会回调 / If there is any exception, it will be called back after loading
+     * 会在触发下载的主线程回调 / Will call back in the main thread of the download
+     *
+     * @param exceptions 一个或多个异常 / One or more exceptions
+     */
+    void onLoaded(Collection<SourceLoadException> exceptions);
+}
+
+```
+
+##### 自定义并发处理
+
+可以自定义实现`SourceLoaderInvoker `
+
+```java
+/**
+ * 下载源加载器的调用器 / Invoker to invoke SourceLoader
+ */
+public interface SourceLoaderInvoker {
+
+    /**
+     * 调用加载器 / Invoke loader
+     *
+     * @param loaders 加载器 / Loaders
+     * @param context 下载上下文 / Context of download
+     * @return 加载结果 / Results of loadings
+     * @throws IOException I/O exception
+     */
+    Collection<SourceLoadResult> invoke(Collection<? extends SourceLoader> loaders, DownloadContext context) throws IOException;
+}
+
+```
+
+通过调用对应的方法触发加载，并返回加载结果
+
+```java
+SourceLoadResult result = SourceLoader.load(context);
+```
 
 ### 网络资源的缓存处理
 
@@ -216,3 +326,12 @@ public String[] sourceCache() {
   - 下载结束后是否删除缓存文件
 
 ### 资源压缩
+
+默认情况下，如果是单个资源则不会压缩，如果是多个资源或者是一整个文件夹则会压缩处理
+
+可以使用`@Download(forceCompress = true)`强制压缩
+
+目前只实现了Java自带的Zip压缩`ZipSourceCompressor`
+
+##### 自定义压缩
+
