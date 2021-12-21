@@ -27,7 +27,7 @@ public String http() {
 
 ### 集成
 
-当前版本
+当前版本`1.0.2`
 
 ```gradle
 //包含了core，aop，web-servlet，source-classpath模块
@@ -105,7 +105,7 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 - `DestroyContextHandler`
   - 销毁下载上下文
 
-##### 扩展流程
+##### 自定义扩展流程
 
 可以自定义实现`DownloadHandler`或`AutomaticDownloadHandler`
 
@@ -142,7 +142,7 @@ public List<Object> list() {
 
 ##### 自定义支持
 
-实现`SourceFactory`来自定义支持任意的类型和对象
+实现`SourceFactory`或`PrefixSourceFactory`来自定义支持任意的类型和对象
 
 ```java
 /**
@@ -171,13 +171,13 @@ public interface SourceFactory extends OrderProvider {
 
 ```
 
-### 网络资源的并发处理
+### 网络资源并发加载
 
 针对一些网络资源，如HTTP、FTP等，需要进行并发的加载，通过`SourceLoaderInvoker`来实现
 
 |类型|实现类|说明|依赖|
 |-|-|-|-|
-|串行|`SerialSourceLoaderInvoker`|按顺序加载，适用于本地文件||
+|串行|`SerialSourceLoaderInvoker`|按顺序加载，适用于本地文件，默认||
 |线程池|`ExecutorSourceLoaderInvoker`|依赖线程池加载，适合网络资源||
 |协程|`CoroutinesSourceLoaderInvoker`|依赖协程加载，适合网络资源|`load-coroutines`|
 
@@ -206,7 +206,7 @@ public class ConceptDownloadConfig {
 
 ```
 
-##### 自定义并发处理
+##### 自定义并发加载流程
 
 可以自定义实现`SourceLoaderInvoker`或`ParallelSourceLoaderInvoker`或`ConcurrentSourceLoaderInvoker`
 
@@ -235,7 +235,7 @@ public interface SourceLoaderInvoker {
 SourceLoadResult result = SourceLoader.load(context);
 ```
 
-##### 异常处理
+##### 加载异常处理
 
 默认实现为`RethrowLoadedSourceLoadExceptionHandler`将在加载结束时进行异常判断
 
@@ -266,7 +266,7 @@ public interface SourceLoadExceptionHandler {
 
 ```
 
-### 网络资源的缓存处理
+### 网络资源缓存处理
 
 ##### 配置文件
 
@@ -275,30 +275,24 @@ concept:
   download:
     source:
       cache:
-        enabled: true //是否启用
-        path: / //缓存目录
-        delete: false //下载结束后是否删除
+        enabled: true #是否启用
+        path: / #缓存目录
+        delete: false #下载结束后是否删除
 ```
 
 ##### 代码全局配置
 
 ```java
 @Configuration
-public class ConceptDownloadConfig {
+public class ConceptDownloadConfig implements DownloadConfigurer {
 
-    @Bean
-    public DownloadConfigurer downloadConfigurer() {
-        return new DownloadConfigurer() {
-            @Override
-            public void configure(DownloadConfiguration configuration) {
-                System.out.println("可以在这里设置或覆盖配置文件的配置！");
-                configuration.getSource().getCache().setEnabled(true);
-                configuration.getSource().getCache().setPath("/");
-                configuration.getSource().getCache().setDelete(false);
-            }
-        };
+    @Override
+    public void configure(DownloadConfiguration configuration) {
+        configuration.getSource().getCache().setEnabled(true);
+        configuration.getSource().getCache().setPath("/");
+        configuration.getSource().getCache().setDelete(false);
+        System.out.println("可以在这里覆盖配置文件的配置！");
     }
-}
 ```
 
 ##### 注解配置单个方法
