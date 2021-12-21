@@ -105,6 +105,10 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 - `DestroyContextHandler`
   - 销毁下载上下文
 
+##### 扩展流程
+
+可以自定义实现`DownloadHandler`或`AutomaticDownloadHandler`
+
 ### 支持的下载类型
 
 所有的下载对象最终都会通过`Source`体现，作为原始的下载数据的抽象
@@ -202,6 +206,35 @@ public class ConceptDownloadConfig {
 
 ```
 
+##### 自定义并发处理
+
+可以自定义实现`SourceLoaderInvoker`或`ParallelSourceLoaderInvoker`或`ConcurrentSourceLoaderInvoker`
+
+```java
+/**
+ * 下载源加载器的调用器 / Invoker to invoke SourceLoader
+ */
+public interface SourceLoaderInvoker {
+
+    /**
+     * 调用加载器 / Invoke loader
+     *
+     * @param loaders 加载器 / Loaders
+     * @param context 下载上下文 / Context of download
+     * @return 加载结果 / Results of loadings
+     * @throws IOException I/O exception
+     */
+    Collection<SourceLoadResult> invoke(Collection<? extends SourceLoader> loaders, DownloadContext context) throws IOException;
+}
+
+```
+
+通过调用对应的方法触发加载，并返回加载结果
+
+```java
+SourceLoadResult result = SourceLoader.load(context);
+```
+
 ##### 异常处理
 
 默认实现为`RethrowLoadedSourceLoadExceptionHandler`将在加载结束时进行异常判断
@@ -231,35 +264,6 @@ public interface SourceLoadExceptionHandler {
     void onLoaded(Collection<SourceLoadException> exceptions);
 }
 
-```
-
-##### 自定义并发处理
-
-可以自定义实现`SourceLoaderInvoker `
-
-```java
-/**
- * 下载源加载器的调用器 / Invoker to invoke SourceLoader
- */
-public interface SourceLoaderInvoker {
-
-    /**
-     * 调用加载器 / Invoke loader
-     *
-     * @param loaders 加载器 / Loaders
-     * @param context 下载上下文 / Context of download
-     * @return 加载结果 / Results of loadings
-     * @throws IOException I/O exception
-     */
-    Collection<SourceLoadResult> invoke(Collection<? extends SourceLoader> loaders, DownloadContext context) throws IOException;
-}
-
-```
-
-通过调用对应的方法触发加载，并返回加载结果
-
-```java
-SourceLoadResult result = SourceLoader.load(context);
 ```
 
 ### 网络资源的缓存处理
@@ -335,3 +339,36 @@ public String[] sourceCache() {
 
 ##### 自定义压缩
 
+可以自定义实现`SourceCompressor`或`AbstractSourceCompressor`
+
+```java
+/**
+ * 压缩器 / Compressor to compress source
+ */
+public interface SourceCompressor extends OrderProvider {
+
+    /**
+     * 判断是否支持对应的压缩格式 / Judge whether the corresponding compression format is supported
+     *
+     * @param format  压缩格式 / Compression format
+     * @param context 下载上下文 / Context of download
+     * @return 是否支持该压缩格式 / If support this compressed format
+     */
+    boolean support(String format, DownloadContext context);
+
+    /**
+     * 如果支持对应的格式就会调用该方法执行压缩 / This method will be called to perform compression if the corresponding format is supported
+     *
+     * @param source    {@link Source}
+     * @param writer    {@link DownloadWriter}
+     * @param cachePath 缓存路径 / The path of cache
+     * @param context   Context of download
+     * @return An specific compression
+     * @throws IOException I/O exception
+     */
+    Compression compress(Source source, DownloadWriter writer, String cachePath, DownloadContext context) throws IOException;
+}
+
+```
+
+### 压缩缓存
