@@ -59,7 +59,8 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 - concept-download-load-coroutines
   - 基于`Kotlin`协程的I/O请求支持
 - concept-download-spring-boot-starter
-  - `SpringBoot`自动配置模块，包含部分模块
+  - `SpringBoot`自动配置模块
+  - 包含 `core` `aop` `web-servlet` `source-classpath`
 
 ### `@Download` 注解说明
 
@@ -70,7 +71,7 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
   - 如果为`true`，可以直接在浏览器预览
   - 需要配合`contentType`，如图片或视频，默认`false`
 - `@Download(filename = "")`
-  - 指定下载的文件名
+  - 指定下载时浏览器上显示的名称
   - 如果不指定则会获取下载内容的名称，如文件则使用文件名
 - `@Download(contentType = "")`
   - 默认`application/octet-stream`
@@ -122,3 +123,4 @@ public List<Object> list() {
 
 ### 网络资源的并发处理
 
+针对一些网络资源，如HTTP、FTP等，需要进行并发的加载，所以提供了一些现成的加载方式
