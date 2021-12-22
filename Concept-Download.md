@@ -57,7 +57,7 @@ implementation 'com.github.linyuzai:concept-download-source-okhttp:version'
 </dependency>
 ```
 
-### Kotlin协程做并发
+### Kotlin协程实现并发
 
 需要手动依赖如下模块
 
