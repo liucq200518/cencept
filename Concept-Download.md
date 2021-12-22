@@ -208,7 +208,7 @@ public class ConceptDownloadConfig {
 
 ##### 自定义并发加载流程
 
-可以自定义实现`SourceLoaderInvoker`或`ParallelSourceLoaderInvoker`或`ConcurrentSourceLoaderInvoker`
+可以自定义实现`SourceLoaderInvoker`或`ParallelSourceLoaderInvoker`
 
 ```java
 /**
@@ -266,7 +266,7 @@ public interface SourceLoadExceptionHandler {
 
 ```
 
-### 网络资源缓存处理
+### 网络资源缓存
 
 ##### 配置文件
 
@@ -366,3 +366,146 @@ public interface SourceCompressor extends OrderProvider {
 ```
 
 ### 压缩缓存
+
+##### 配置文件
+
+```yaml
+concept:
+  download:
+    compress:
+      cache:
+        enabled: true #是否启用
+        path: / #缓存目录
+        delete: false #下载结束后是否删除
+```
+
+##### 代码全局配置
+
+```java
+@Configuration
+public class ConceptDownloadConfig implements DownloadConfigurer {
+
+    @Override
+    public void configure(DownloadConfiguration configuration) {
+        configuration.getCompress().getCache().setEnabled(true);
+        configuration.getCompress().getCache().setPath("/");
+        configuration.getCompress().getCache().setDelete(false);
+        System.out.println("可以在这里覆盖配置文件的配置！");
+    }
+```
+
+##### 注解配置单个方法
+
+```java
+@Download(filename = "压缩包.zip")
+@CompressCache(group = "compress", delete = true)
+@GetMapping("/compress-cache")
+public String[] compressCache() {
+    return new String[]{
+          "http://127.0.0.1:8080/concept-download/text.txt",
+          "http://127.0.0.1:8080/concept-download/image.jpg",
+          "http://127.0.0.1:8080/concept-download/video.mp4"
+    };
+}
+```
+
+使用`@CompressCache`注解配合`@Download`实现压缩文件的缓存处理
+
+##### `@CompressCache` 注解说明
+
+- `@CompressCache(enabled = true)`
+  - 是否启用缓存
+- `@CompressCache(group = "")`
+  - 分组，会在缓存目录下额外创建一个对应的目录作为实际的缓存目录
+  - 考虑到不同功能出现相同名称的文件等冲突问题
+  - 默认空，不创建，及直接使用配置的缓存目录
+- `@CompressCache(name = "")`
+  - 压缩文件名称
+  - 单下载源会使用该下载源的名名称
+  - 多下载源会使用第一个有名称的下载源的名称
+  - 否则使用切面的类和方法名或是固定的名称
+- `@CompressCache(delete = false)`
+  - 下载结束后是否删除缓存文件
+
+### 响应写入
+
+默认实现`BufferedDownloadWriter`来操作字节流或字符流
+
+可以自定义实现`DownloadWriter`
+
+```java
+/**
+ * 具体操作字节或字符的写入器 / Writer to write bytes or chars
+ */
+public interface DownloadWriter extends OrderProvider {
+
+    /**
+     * @param downloadable 可下载的资源 / Resource can be downloaded
+     * @param range        写入的范围 / Range of writing
+     * @param context      下载上下文 / Context of download
+     * @return 是否支持 / If supported
+     */
+    boolean support(Downloadable downloadable, Range range, DownloadContext context);
+
+    /**
+     * 执行写入 / Do write
+     *
+     * @param is      输入流 / Input stream
+     * @param os      输出流 / Output stream
+     * @param range   写入的范围 / Range of writing
+     * @param charset 编码 / Charset
+     * @param length  总字节数，可能为0 / Total bytes count, may be 0
+     * @throws IOException I/O exception
+     */
+    void write(InputStream is, OutputStream os, Range range, Charset charset, long length) throws IOException;
+}
+
+```
+
+### 对单个下载接口的重写与拦截
+
+接口方法返回`DownloadOptions.Rewriter`即可重写下载参数
+
+同时可以设置拦截器DownloadHandlerInterceptor
+
+```java
+@Download(source = "classpath:/download/README.txt")
+@GetMapping("/rewrite")
+public DownloadOptions.Rewriter rewrite() {
+    return new DownloadOptions.Rewriter() {
+        @Override
+        public DownloadOptions rewrite(DownloadOptions options) {
+            System.out.println("在这里可以修改本次下载的参数！");
+            return options.toBuilder()
+                    //设置拦截器
+                    .interceptor(new StandardDownloadHandlerInterceptor() {
+
+                        @Override
+                        public void onContextInitialized(DownloadContext context) {
+                        }
+
+                        @Override
+                        public void onSourceCreated(DownloadContext context) {
+                        }
+
+                        @Override
+                        public void onSourceLoaded(DownloadContext context) {
+                        }
+
+                        @Override
+                        public void onSourceCompressed(DownloadContext context) {
+                        }
+
+                        @Override
+                        public void onResponseWritten(DownloadContext context) {
+                        }
+
+                        @Override
+                        public void onContextDestroyed(DownloadContext context) {
+                        }
+                    })
+                    .build();
+        }
+    };
+}
+```
