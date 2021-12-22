@@ -1,31 +1,3 @@
-# 目录
-
-- 示例说明
-- 集成
-- @Download 注解说明
-- 整体流程
-  - 自定义扩展流程
-- 支持的下载类型
-  - 默认支持
-  - 自定义支持
-- 网络资源并发加载
-  - 自定义并发加载流程
-  - 加载异常处理
-- 网络资源缓存
-  - 配置文件
-  - 代码全局配置
-  - 注解配置单个方法
-    - @SourceCache 注解说明
-- 资源压缩
-  - 自定义压缩
-- 压缩缓存
-  - 配置文件
-  - 代码全局配置
-  - 注解配置单个方法
-    - @CompressCache 注解说明
-- 响应写入
-- 对单个下载接口的重写与拦截
-
 # 示例说明
 
 用简单的方式实现一个下载接口，直观感受如下
@@ -101,7 +73,7 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 </dependency>
 ```
 
-### 模块：
+### 详细模块
 
 - concept-download-core
   - 核心模块
