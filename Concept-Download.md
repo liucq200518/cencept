@@ -30,17 +30,43 @@ public String http() {
 当前版本`1.0.3`
 
 ```gradle
-//包含了core，aop，web-servlet，source-classpath模块
 implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version'
+```
 
-//如果需要支持http请求则需要手动依赖此模块
+```maven
+<dependency>
+  <groupId>com.github.linyuzai</groupId>
+  <artifactId>concept-download-spring-boot-starter</artifactId>
+  <version>version</version>
+</dependency>
+```
+
+如果需要支持http请求则需要手动依赖如下模块
+
+```gradle
 implementation 'com.github.linyuzai:concept-download-source-okhttp:version'
+```
 
-//如果需要使用Kotlin协程来来做HTTP请求的并发需要手动依赖此模块，core也提供了线程池的方式需要手动配置
+```maven
+<dependency>
+  <groupId>com.github.linyuzai</groupId>
+  <artifactId>concept-download-source-okhttp</artifactId>
+  <version>version</version>
+</dependency>
+```
+
+如果需要使用Kotlin协程来来做HTTP请求的并发需要手动依赖如下模块
+
+```gradle
 implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 ```
 
 ```maven
+<dependency>
+  <groupId>com.github.linyuzai</groupId>
+  <artifactId>concept-download-load-coroutines</artifactId>
+  <version>version</version>
+</dependency>
 ```
 
 模块：
