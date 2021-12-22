@@ -1,4 +1,32 @@
-### 示例说明
+# 目录
+
+- 示例说明
+- 集成
+- @Download 注解说明
+- 整体流程
+  - 自定义扩展流程
+- 支持的下载类型
+  - 默认支持
+  - 自定义支持
+- 网络资源并发加载
+  - 自定义并发加载流程
+  - 加载异常处理
+- 网络资源缓存
+  - 配置文件
+  - 代码全局配置
+  - 注解配置单个方法
+    - @SourceCache 注解说明
+- 资源压缩
+  - 自定义压缩
+- 压缩缓存
+  - 配置文件
+  - 代码全局配置
+  - 注解配置单个方法
+    - @CompressCache 注解说明
+- 响应写入
+- 对单个下载接口的重写与拦截
+
+# 示例说明
 
 用简单的方式实现一个下载接口，直观感受如下
 
@@ -25,7 +53,7 @@ public String http() {
 
 两者没有任何区别，只是返回值支持动态的对象
 
-### 集成
+# 集成
 
 当前版本`1.0.3`
 
@@ -33,7 +61,7 @@ public String http() {
 implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version'
 ```
 
-```maven
+```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-download-spring-boot-starter</artifactId>
@@ -41,13 +69,15 @@ implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version
 </dependency>
 ```
 
-如果需要支持http请求则需要手动依赖如下模块
+### 支持http请求
+
+需要手动依赖如下模块
 
 ```gradle
 implementation 'com.github.linyuzai:concept-download-source-okhttp:version'
 ```
 
-```maven
+```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-download-source-okhttp</artifactId>
@@ -55,13 +85,15 @@ implementation 'com.github.linyuzai:concept-download-source-okhttp:version'
 </dependency>
 ```
 
-如果需要使用Kotlin协程来来做HTTP请求的并发需要手动依赖如下模块
+### Kotlin协程做并发
+
+需要手动依赖如下模块
 
 ```gradle
 implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 ```
 
-```maven
+```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-download-load-coroutines</artifactId>
@@ -69,7 +101,7 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 </dependency>
 ```
 
-模块：
+### 模块：
 
 - concept-download-core
   - 核心模块
@@ -88,7 +120,7 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
   - `SpringBoot`自动配置模块
   - 包含 `core` `aop` `web-servlet` `source-classpath`
 
-### `@Download` 注解说明
+# `@Download` 注解说明
 
 - `@Download(source = {})`
   - 需要下载的内容，但是优先级低于返回值
@@ -114,7 +146,7 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 - `@Download(extra = "")`
   - 额外的数据，当需要自行编写额外流程业务时可能会用到
 
-### 整体流程
+# 整体流程
 
 整个下载流程由`DownloadHandler`和`DownloadHandlerChain`实现链式处理
 
@@ -131,15 +163,13 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 - `DestroyContextHandler`
   - 销毁下载上下文
 
-##### 自定义扩展流程
+### 自定义扩展流程
 
 可以自定义实现`DownloadHandler`或`AutomaticDownloadHandler`
 
-### 支持的下载类型
+# 支持的下载类型
 
 所有的下载对象最终都会通过`Source`体现，作为原始的下载数据的抽象
-
-##### 默认支持
 
 | 类型 | 匹配 | 示例 | 实现类 | 工厂 | 依赖 |
 |-|-|-|-|-|-|
@@ -166,7 +196,7 @@ public List<Object> list() {
 }
 ```
 
-##### 自定义支持
+### 自定义支持
 
 实现`SourceFactory`或`PrefixSourceFactory`和`Source`或`AbstractSource`或`AbstractLoadableSource`来自定义支持任意的类型和对象
 
@@ -197,7 +227,7 @@ public interface SourceFactory extends OrderProvider {
 
 ```
 
-### 网络资源并发加载
+# 网络资源并发加载
 
 针对一些网络资源，如HTTP、FTP等，需要进行并发的加载，通过`SourceLoaderInvoker`来实现
 
@@ -232,7 +262,7 @@ public class ConceptDownloadConfig {
 
 ```
 
-##### 自定义并发加载流程
+### 自定义并发加载流程
 
 可以自定义实现`SourceLoaderInvoker`或`ParallelSourceLoaderInvoker`
 
@@ -261,7 +291,7 @@ public interface SourceLoaderInvoker {
 SourceLoadResult result = SourceLoader.load(context);
 ```
 
-##### 加载异常处理
+### 加载异常处理
 
 默认实现为`RethrowLoadedSourceLoadExceptionHandler`将在加载结束时进行异常判断
 
@@ -292,9 +322,9 @@ public interface SourceLoadExceptionHandler {
 
 ```
 
-### 网络资源缓存
+# 网络资源缓存
 
-##### 配置文件
+### 配置文件
 
 ```yaml
 concept:
@@ -306,7 +336,7 @@ concept:
         delete: false #下载结束后是否删除
 ```
 
-##### 代码全局配置
+### 代码全局配置
 
 ```java
 @Configuration
@@ -321,7 +351,7 @@ public class ConceptDownloadConfig implements DownloadConfigurer {
     }
 ```
 
-##### 注解配置单个方法
+### 注解配置单个方法
 
 ```java
 @Download(filename = "压缩包.zip")
@@ -349,7 +379,7 @@ public String[] sourceCache() {
 - `@SourceCache(delete = false)`
   - 下载结束后是否删除缓存文件
 
-### 资源压缩
+# 资源压缩
 
 默认情况下，如果是单个资源则不会压缩，如果是多个资源或者是一整个文件夹则会压缩处理
 
@@ -357,7 +387,7 @@ public String[] sourceCache() {
 
 目前只实现了Java自带的Zip压缩`ZipSourceCompressor`
 
-##### 自定义压缩
+### 自定义压缩
 
 可以自定义实现`SourceCompressor`或`AbstractSourceCompressor`
 
@@ -391,9 +421,9 @@ public interface SourceCompressor extends OrderProvider {
 
 ```
 
-### 压缩缓存
+# 压缩缓存
 
-##### 配置文件
+### 配置文件
 
 ```yaml
 concept:
@@ -405,7 +435,7 @@ concept:
         delete: false #下载结束后是否删除
 ```
 
-##### 代码全局配置
+### 代码全局配置
 
 ```java
 @Configuration
@@ -420,7 +450,7 @@ public class ConceptDownloadConfig implements DownloadConfigurer {
     }
 ```
 
-##### 注解配置单个方法
+### 注解配置单个方法
 
 ```java
 @Download(filename = "压缩包.zip")
@@ -453,9 +483,11 @@ public String[] compressCache() {
 - `@CompressCache(delete = false)`
   - 下载结束后是否删除缓存文件
 
-### 响应写入
+# 响应写入
 
 默认实现`BufferedDownloadWriter`来操作字节流或字符流
+
+### 自定义写入器
 
 可以自定义实现`DownloadWriter`
 
@@ -488,7 +520,7 @@ public interface DownloadWriter extends OrderProvider {
 
 ```
 
-### 对单个下载接口的重写与拦截
+# 对单个下载接口的重写与拦截
 
 接口方法返回`DownloadOptions.Rewriter`即可重写下载参数
 
