@@ -115,16 +115,16 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 
 ##### 默认支持
 
-|类型|匹配|实现类|工厂|示例|依赖|
+| 类型 | 匹配 | 示例 | 实现类 | 工厂 | 依赖 |
 |-|-|-|-|-|-|
-|文件|"file:"前缀的字符串|`FileSource`|`FilePrefixSourceFactory`|`file:/Users/Shared/README.txt`||
-|文件|`File`对象|`FileSource`|`FileSourceFactory`|`new File("/Users/Shared/README.txt")`||
-|user.home目录下的文件|"user.home:","user-home:","user_home:"前缀的字符串|`FileSource`|`UserHomeSourceFactory`|`user.home:/Public/README.txt`||
-|classpath目录下的资源|"classpath:"前缀的字符串|`ClassPathResourceSource`|`ClassPathPrefixSourceFactory`|`classpath:/download/README.txt`|`source-classpath`|
-|classpath目录下的资源|`ClassPathResource`对象|`ClassPathResourceSource`|`ClassPathResourceSourceFactory`|`new ClassPathResource("/download/README.txt")`|`source-classpath`|
-|文本文件|任意的String对象|`TextSource`|`TextSourceFactory`|"任意的文本将会直接作为文本文件处理"||
-|输入流|`InputStream`对象|`InputStreamSource`|`InputStreamSourceFactory`|任意的输入流||
-|HTTP资源|http或https的url字符串|`OkHttpSource`|`OkHttpSourceFactory`|http://127.0.0.1:8080/concept-download/image.jpg|`source-okhttp`|
+|文件|"file:"前缀的字符串|`file:/Users/Shared/README.txt`|`FileSource`|`FilePrefixSourceFactory`||
+|文件|`File`对象|`new File("/Users/Shared/README.txt")`|`FileSource`|`FileSourceFactory`||
+|user.home目录下的文件|"user.home:","user-home:","user_home:"前缀的字符串|`user.home:/Public/README.txt`|`FileSource`|`UserHomeSourceFactory`||
+|classpath目录下的资源|"classpath:"前缀的字符串|`classpath:/download/README.txt`|`ClassPathResourceSource`|`ClassPathPrefixSourceFactory`|`source-classpath`|
+|classpath目录下的资源|`ClassPathResource`对象|`new ClassPathResource("/download/README.txt")`|`ClassPathResourceSource`|`ClassPathResourceSourceFactory`|`source-classpath`|
+|文本文件|任意的String对象|"任意的文本将会直接作为文本文件处理"|`TextSource`|`TextSourceFactory`||
+|输入流|`InputStream`对象|任意的输入流|`InputStreamSource`|`InputStreamSourceFactory`||
+|HTTP资源|http或https的url|http://127.0.0.1:8080/concept-download/image.jpg|`OkHttpSource`|`OkHttpSourceFactory`|`source-okhttp`|
 
 **同时支持上述类型任意组合的数组或集合**
 
@@ -142,7 +142,7 @@ public List<Object> list() {
 
 ##### 自定义支持
 
-实现`SourceFactory`或`PrefixSourceFactory`来自定义支持任意的类型和对象
+实现`SourceFactory`或`PrefixSourceFactory`和`Source`或`AbstractSource`或`AbstractLoadableSource`来自定义支持任意的类型和对象
 
 ```java
 /**
@@ -423,7 +423,7 @@ public String[] compressCache() {
   - 压缩文件名称
   - 单下载源会使用该下载源的名名称
   - 多下载源会使用第一个有名称的下载源的名称
-  - 否则使用切面的类和方法名或是固定的名称
+  - 否则使用`CacheNameGenerator`生成，默认使用时间戳
 - `@CompressCache(delete = false)`
   - 下载结束后是否删除缓存文件
 
@@ -466,7 +466,7 @@ public interface DownloadWriter extends OrderProvider {
 
 接口方法返回`DownloadOptions.Rewriter`即可重写下载参数
 
-同时可以设置拦截器DownloadHandlerInterceptor
+同时可以设置拦截器`DownloadHandlerInterceptor`
 
 ```java
 @Download(source = "classpath:/download/README.txt")
