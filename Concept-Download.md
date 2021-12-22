@@ -27,7 +27,7 @@ public String http() {
 
 ### 集成
 
-当前版本`1.0.2`
+当前版本`1.0.3`
 
 ```gradle
 //包含了core，aop，web-servlet，source-classpath模块
