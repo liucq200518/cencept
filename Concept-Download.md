@@ -75,20 +75,20 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 
 ### 详细模块
 
-- concept-download-core
+- `concept-download-core`
   - 核心模块
-- concept-download-aop
+- `concept-download-aop`
   - 切面模块
-- concept-download-web-servlet
+- `concept-download-web-servlet`
   - `Servlet`支持模块
   - `Webflux`暂未支持，有需要再加
-- concept-download-source-classpath
+- `concept-download-source-classpath`
   - `ClassPathResource`支持
-- concept-download-source-okhttp
+- `concept-download-source-okhttp`
   - 基于`OkHttp`的HTTP资源支持
-- concept-download-load-coroutines
+- `concept-download-load-coroutines`
   - 基于`Kotlin`协程的I/O请求支持
-- concept-download-spring-boot-starter
+- `concept-download-spring-boot-starter`
   - `SpringBoot`自动配置模块
   - 包含 `core` `aop` `web-servlet` `source-classpath`
 
