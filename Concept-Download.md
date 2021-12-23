@@ -205,12 +205,19 @@ public List<BusinessModel> businessModel() {
 - `@SourceObject`
   - 标注在具体下载对象上
 - `@SourceName`
+  - 指定名称
 - `@SourceCharset`
+  - 指定编码
 - `@SourceLength`
+  - 指定长度，及字节数
 - `@SourceAsyncLoad`
+  - 指定是否异步加载
 - `@SourceCacheEnabled`
+  - 指定是否启用缓存
 - `@SourceCacheExisted`
+  - 缓存是否存在
 - `@SourceCachePath`
+  - 缓存目录
 
 所有注解子类优先于父类，方法优先于字段
 
