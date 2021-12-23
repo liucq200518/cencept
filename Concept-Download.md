@@ -168,6 +168,52 @@ public List<Object> list() {
 }
 ```
 
+### CGLIB代理方式
+
+对于已经存在的数据模型，可以通过注解的方式生成一个Source代理
+
+```java
+@Data
+@SourceModel
+@AllArgsConstructor
+public static class BusinessModel {
+
+    @SourceName
+    private String name;
+
+    @SourceObject
+    private String url;
+}
+
+@Download
+@SourceCache(group = "model")
+@GetMapping("/business-model")
+public List<BusinessModel> businessModel() {
+    List<BusinessModel> businessModels = new ArrayList<>();
+    businessModels.add(new BusinessModel("BusinessModel.txt", "http://127.0.0.1:8080/concept-download/text.txt"));
+    businessModels.add(new BusinessModel("BusinessModel.jpg", "http://127.0.0.1:8080/concept-download/image.jpg"));
+    businessModels.add(new BusinessModel("BusinessModel.mp4", "http://127.0.0.1:8080/concept-download/video.mp4"));
+    return businessModels;
+}
+```
+
+##### 注解列表
+
+- `@SourceModel`
+  - 标注在类上
+  - 表明是一个`Source`
+- `@SourceObject`
+  - 标注在具体下载对象上
+- `@SourceName`
+- `@SourceCharset`
+- `@SourceLength`
+- `@SourceAsyncLoad`
+- `@SourceCacheEnabled`
+- `@SourceCacheExisted`
+- `@SourceCachePath`
+
+所有注解子类优先于父类，方法优先于字段
+
 ### 自定义支持
 
 实现`SourceFactory`或`PrefixSourceFactory`和`Source`或`AbstractSource`或`AbstractLoadableSource`来自定义支持任意的类型和对象
