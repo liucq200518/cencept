@@ -27,7 +27,7 @@ public String http() {
 
 # 集成
 
-当前版本`1.0.3`
+当前版本`1.1.1`
 
 ```gradle
 implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version'
