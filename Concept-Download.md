@@ -27,7 +27,7 @@ public String http() {
 
 # 集成
 
-当前版本`1.1.1`
+当前版本`1.1.2`
 
 ```gradle
 implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version'
@@ -151,7 +151,6 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 |classpath目录下的资源|"classpath:"前缀的字符串|`classpath:/download/README.txt`|`ClassPathResourceSource`|`ClassPathPrefixSourceFactory`|`source-classpath`|
 |classpath目录下的资源|`ClassPathResource`对象|`new ClassPathResource("/download/README.txt")`|`ClassPathResourceSource`|`ClassPathResourceSourceFactory`|`source-classpath`|
 |文本文件|任意的String对象|"任意的文本将会直接作为文本文件处理"|`TextSource`|`TextSourceFactory`||
-|输入流|`InputStream`对象|任意的输入流|`InputStreamSource`|`InputStreamSourceFactory`||
 |HTTP资源|http或https的url|http://127.0.0.1:8080/concept-download/image.jpg|`OkHttpSource`|`OkHttpSourceFactory`|`source-okhttp`|
 
 **同时支持上述类型任意组合的数组或集合**
@@ -168,9 +167,9 @@ public List<Object> list() {
 }
 ```
 
-### CGLIB代理方式
+### 反射方式
 
-对于已经存在的数据模型，可以通过注解的方式生成一个Source代理
+对于已经存在的数据模型，可以通过注解的方式将一些属性覆盖到对应的`Source`
 
 ```java
 @Data
@@ -186,7 +185,6 @@ public static class BusinessModel {
 }
 
 @Download
-@SourceCache(group = "model")
 @GetMapping("/business-model")
 public List<BusinessModel> businessModel() {
     List<BusinessModel> businessModels = new ArrayList<>();
@@ -219,7 +217,30 @@ public List<BusinessModel> businessModel() {
 - `@SourceCachePath`
   - 缓存目录
 
-所有注解子类优先于父类，方法优先于字段
+所有注解子类优先于父类
+
+##### 数据类型
+
+可以自定义ValueConvertor实现
+
+```java
+/**
+ * 值转换器 / Value convertor
+ *
+ * @param <Original> 原始类型 / Original type
+ * @param <Target>   目标类型 / Target type
+ */
+public interface ValueConvertor<Original, Target> {
+
+    Target convert(Original value);
+}
+```
+
+并通过ValueConversion注册
+
+```java
+ValueConversion.helper().register(ValueConvertor);
+```
 
 ### 自定义支持
 
@@ -436,12 +457,11 @@ public interface SourceCompressor extends OrderProvider {
      *
      * @param source    {@link Source}
      * @param writer    {@link DownloadWriter}
-     * @param cachePath 缓存路径 / The path of cache
      * @param context   Context of download
      * @return An specific compression
      * @throws IOException I/O exception
      */
-    Compression compress(Source source, DownloadWriter writer, String cachePath, DownloadContext context) throws IOException;
+    Compression compress(Source source, DownloadWriter writer, DownloadContext context) throws IOException;
 }
 
 ```
@@ -537,10 +557,10 @@ public interface DownloadWriter extends OrderProvider {
      * @param os      输出流 / Output stream
      * @param range   写入的范围 / Range of writing
      * @param charset 编码 / Charset
-     * @param length  总字节数，可能为0 / Total bytes count, may be 0
+     * @param length  总字节数，可能为null / Total bytes count, may be null
      * @throws IOException I/O exception
      */
-    void write(InputStream is, OutputStream os, Range range, Charset charset, long length) throws IOException;
+    void write(InputStream is, OutputStream os, Range range, Charset charset, Long length) throws IOException;
 }
 
 ```
