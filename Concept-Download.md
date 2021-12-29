@@ -1,8 +1,8 @@
 # 概述
 
-主要用于简单快速的实现一个可能有一定复杂度的下载功能
+主要用于简单快速的实现一个（可能有一定复杂度的）下载功能
 
-你只需要提供一个文件路径，或者一个http地址，其他的事情都有它帮你完成
+你只需要提供一个文件路径，或者一个http地址，其他的事情都由它帮你完成
 
 1. 需要压缩？
 2. 压缩文件的缓存？
@@ -54,7 +54,9 @@ implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version
 </dependency>
 ```
 
-### 支持http请求
+引入`spring-boot-starter`包就可以直接使用`@Download`注解啦
+
+### 支持http请求的资源类型
 
 需要手动依赖如下模块
 
@@ -70,7 +72,7 @@ implementation 'com.github.linyuzai:concept-download-source-okhttp:version'
 </dependency>
 ```
 
-### Kotlin协程实现并发
+### Kotlin协程实现网络资源的并发请求
 
 需要手动依赖如下模块
 
@@ -86,7 +88,7 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 </dependency>
 ```
 
-手动注入
+并且手动注入
 
 ```java
 @Configuration
@@ -101,7 +103,7 @@ public class ConceptDownloadConfig {
 
 ```
 
-### 详细模块
+### 模块说明
 
 - `concept-download-core`
   - 核心模块
@@ -164,9 +166,9 @@ public class ConceptDownloadConfig {
 - `DestroyContextHandler`
   - 销毁下载上下文
 
-### 自定义扩展流程
+### 自定义流程扩展
 
-可以自定义实现`DownloadHandler`或`AutomaticDownloadHandler`
+可以自定义实现`DownloadHandler`或`AutomaticDownloadHandler`并注入到`Spring`的容器中即可
 
 # 支持的下载类型
 
@@ -196,7 +198,7 @@ public List<Object> list() {
 }
 ```
 
-### 反射方式
+### 支持反射的方式表示下载源
 
 对于已经存在的数据模型，可以通过注解的方式将一些属性覆盖到对应的`Source`
 
@@ -224,7 +226,7 @@ public List<BusinessModel> businessModel() {
 }
 ```
 
-##### 注解列表
+##### 注解列表说明
 
 - `@SourceModel`
   - 标注在类上
@@ -246,11 +248,36 @@ public List<BusinessModel> businessModel() {
 - `@SourceCachePath`
   - 缓存目录
 
+除了`@SourceModel`必须标注在类上
+
+其他注解都可以标注在字段或Get方法上
+
 所有注解子类优先于父类
 
-##### 数据类型
+##### 反射字段的数据类型
 
-可以自定义ValueConvertor实现
+`Source`中的charset为`Charset`类型
+
+如果我们的数据模型中对应的类型是`String`
+
+那么在该属性上标注`@SourceCharset`将会导致反射异常
+
+所以引入了`ValueConvertor`来处理类型的转换
+
+当然`String`转`Charset`已经提供实现
+
+```java
+public class StringToCharsetValueConvertor implements ValueConvertor<String, Charset> {
+
+    @Override
+    public Charset convert(String value) {
+        return Charset.forName(value);
+    }
+}
+
+```
+
+支持自定义`ValueConvertor`实现
 
 ```java
 /**
@@ -265,13 +292,13 @@ public interface ValueConvertor<Original, Target> {
 }
 ```
 
-并通过ValueConversion注册
+并通过`ValueConversion`注册
 
 ```java
 ValueConversion.helper().register(ValueConvertor);
 ```
 
-### 自定义支持
+### 自定义支持任意类型的下载数据
 
 实现`SourceFactory`或`PrefixSourceFactory`和`Source`或`AbstractSource`或`AbstractLoadableSource`来自定义支持任意的类型和对象
 
@@ -301,6 +328,10 @@ public interface SourceFactory extends OrderProvider {
 }
 
 ```
+
+并且将对应的`SourceFactory`注入到`Spring`容器中
+
+在这里插一句：大家如果有其他频繁使用的下载源类型也可以联系我添加支持，或者直接提PR
 
 # 网络资源并发加载
 
@@ -337,7 +368,7 @@ public class ConceptDownloadConfig {
 
 ```
 
-### 自定义并发加载流程
+### 自定义并发加载方式
 
 可以自定义实现`SourceLoaderInvoker`或`ParallelSourceLoaderInvoker`
 
@@ -368,9 +399,15 @@ SourceLoadResult result = SourceLoader.load(context);
 
 ### 加载异常处理
 
-默认实现为`RethrowLoadedSourceLoadExceptionHandler`将在加载结束时进行异常判断
+默认实现为`RethrowLoadedSourceLoadExceptionHandler`
 
-可以自定义实现`SourceLoadExceptionHandler`
+将在所有资源都加载结束后进行判断
+
+如果有大于等于一个的异常
+
+将会抛出第一个异常并终止下载流程
+
+可以自定义实现`SourceLoadExceptionHandler`并注入到`Spring`容器中
 
 ```java
 /**
@@ -399,7 +436,7 @@ public interface SourceLoadExceptionHandler {
 
 # 网络资源缓存
 
-### 配置文件
+### 配置文件配置
 
 ```yaml
 concept:
@@ -441,7 +478,7 @@ public String[] sourceCache() {
 }
 ```
 
-使用`@SourceCache`注解配合`@Download`实现下载资源的缓存处理
+使用`@SourceCache`注解配合`@Download`实现下载资源的缓存处理，优先级高于上面两种方式
 
 ##### `@SourceCache` 注解说明
 
@@ -462,9 +499,11 @@ public String[] sourceCache() {
 
 目前只实现了Java自带的Zip压缩`ZipSourceCompressor`
 
+插一句：如果大家有其他的压缩格式需求也可以联系我支持，或者直接提PR
+
 ### 自定义压缩
 
-可以自定义实现`SourceCompressor`或`AbstractSourceCompressor`
+可以自定义实现`SourceCompressor`或`AbstractSourceCompressor`并注入到`Spring`容器中
 
 ```java
 /**
@@ -497,7 +536,7 @@ public interface SourceCompressor extends OrderProvider {
 
 # 压缩缓存
 
-### 配置文件
+### 配置文件配置
 
 ```yaml
 concept:
@@ -539,7 +578,7 @@ public String[] compressCache() {
 }
 ```
 
-使用`@CompressCache`注解配合`@Download`实现压缩文件的缓存处理
+使用`@CompressCache`注解配合`@Download`实现压缩文件的缓存处理，优先级高于上面两种方式
 
 ##### `@CompressCache` 注解说明
 
@@ -559,11 +598,13 @@ public String[] compressCache() {
 
 # 响应写入
 
+这部分是对输入输出流的具体操作实现
+
 默认实现`BufferedDownloadWriter`来操作字节流或字符流
 
 ### 自定义写入器
 
-可以自定义实现`DownloadWriter`
+可以自定义实现`DownloadWriter`并注入到`Spring`容器中
 
 ```java
 /**
@@ -596,9 +637,11 @@ public interface DownloadWriter extends OrderProvider {
 
 # 对单个下载接口的重写与拦截
 
+可以较高程度的定制化单个下载接口
+
 接口方法返回`DownloadOptions.Rewriter`即可重写下载参数
 
-同时可以设置拦截器`DownloadHandlerInterceptor`
+同时可以设置拦截器`DownloadHandlerInterceptor`在每个流程之后回调
 
 ```java
 @Download(source = "classpath:/download/README.txt")
