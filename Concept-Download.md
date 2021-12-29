@@ -1,6 +1,6 @@
 # 概述
 
-主要用于简单快速的实现一个（可能有一定复杂度的）下载功能
+主要用于简单快速的实现一个下载功能
 
 你只需要提供一个文件路径，或者一个http地址，其他的事情都由它帮你完成
 
@@ -105,49 +105,29 @@ public class ConceptDownloadConfig {
 
 ### 模块说明
 
-- `concept-download-core`
-  - 核心模块
-- `concept-download-aop`
-  - 切面模块
-- `concept-download-web-servlet`
-  - `Servlet`支持模块
-  - `Webflux`暂未支持，有需要再加
-- `concept-download-source-classpath`
-  - `ClassPathResource`支持
-- `concept-download-source-okhttp`
-  - 基于`OkHttp`的HTTP资源支持
-- `concept-download-load-coroutines`
-  - 基于`Kotlin`协程的I/O请求支持
-- `concept-download-spring-boot-starter`
-  - `SpringBoot`自动配置模块
-  - 包含 `core` `aop` `web-servlet` `source-classpath`
+| 模块 | 说明 |
+|-|-|
+|`concept-download-core`|核心模块|
+|`concept-download-aop`|切面模块|
+|`concept-download-web-servlet`|`Servlet`支持模块<br>`Webflux`暂未支持，有需要再加|
+|`concept-download-source-classpath`|`ClassPathResource`支持|
+|`concept-download-source-okhttp`|基于`OkHttp`的HTTP资源支持|
+|`concept-download-load-coroutines`|基于`Kotlin`协程的I/O请求支持|
+|`concept-download-spring-boot-starter`|`SpringBoot`自动配置模块<br>包含 `core` `aop` `web-servlet` `source-classpath`|
 
 # `@Download` 注解说明
 
-- `@Download(source = {})`
-  - 需要下载的内容，但是优先级低于返回值
-  - 如果方法返回值不为`null`则会使用返回值作为下载的内容
-- `@Download(inline = false)`
-  - 如果为`true`，可以直接在浏览器预览
-  - 需要配合`contentType`，如图片或视频，默认`false`
-- `@Download(filename = "")`
-  - 指定下载时浏览器上显示的名称
-  - 如果不指定则会获取下载内容的名称，如文件则使用文件名
-- `@Download(contentType = "")`
-  - 如果未指定，会尝试获取
-  - 如果尝试获取失败，则默认`application/octet-stream`或`application/x-zip-compressed`
-- `@Download(compressFormat = "")`
-  - 压缩格式，默认`zip`
-- `@Download(forceCompress = false)`
-  - 强制压缩
-  - 如果为`true`，不管下载的对象有几个都会压缩
-  - 如果为`false`，有多个下载对象时压缩，只有一个下载对象时不压缩
-- `@Download(charset = "")`
-  - 如果下载包含中文的文本文件出现乱码，可以尝试指定编码
-- `@Download(headers = {})`
-  - 统一的响应头，每2个为一组
-- `@Download(extra = "")`
-  - 额外的数据，当需要自行编写额外流程业务时可能会用到
+| 参数 | 说明 |
+|-|-|
+|`@Download(source = {})`|需要下载的内容，但是优先级低于返回值<br>如果方法返回值不为`null`则会使用返回值作为下载的内容|
+|`@Download(inline = false)`|如果为`true`，可以直接在浏览器预览<br>需要配合`contentType`，如图片或视频，默认`false`|
+|`@Download(filename = "")`|指定下载时浏览器上显示的名称<br>如果不指定则会获取下载内容的名称，如文件则使用文件名|
+|`@Download(contentType = "")`|如果未指定，会尝试获取<br>如果尝试获取失败，则默认`application/octet-stream`<br>或`application/x-zip-compressed`|
+|`@Download(compressFormat = "")`|压缩格式，默认`zip`|
+|`@Download(forceCompress = false)`|强制压缩<br>如果为`true`，不管下载的对象有几个都会压缩<br>如果为`false`，有多个下载对象时压缩，只有一个下载对象时不压缩|
+|`@Download(charset = "")`|如果下载包含中文的文本文件出现乱码，可以尝试指定编码|
+|`@Download(headers = {})`|统一的响应头，每2个为一组容|
+|`@Download(extra = "")`|额外的数据，当需要自行编写额外流程业务时可能会用到|
 
 # 整体流程
 
