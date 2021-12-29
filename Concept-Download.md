@@ -73,6 +73,21 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 </dependency>
 ```
 
+手动注入
+
+```java
+@Configuration
+public class ConceptDownloadConfig {
+
+    @Bean
+    public CoroutinesSourceLoaderInvoker coroutinesSourceLoaderInvoker() {
+        System.out.println("如果需要进行HTTP请求可以使用协程加载！");
+        return new CoroutinesSourceLoaderInvoker();
+    }
+}
+
+```
+
 ### 详细模块
 
 - `concept-download-core`
