@@ -538,7 +538,7 @@ public String[] compressCache() {
   - 默认空，不创建，及直接使用配置的缓存目录
 - `@CompressCache(name = "")`
   - 压缩文件名称
-  - 单下载源会使用该下载源的名名称
+  - 单下载源会使用该下载源的名称
   - 多下载源会使用第一个有名称的下载源的名称
   - 否则使用`CacheNameGenerator`生成，默认使用时间戳
 - `@CompressCache(delete = false)`
