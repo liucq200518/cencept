@@ -119,7 +119,8 @@ public class ConceptDownloadConfig {
   - 指定下载时浏览器上显示的名称
   - 如果不指定则会获取下载内容的名称，如文件则使用文件名
 - `@Download(contentType = "")`
-  - 默认`application/octet-stream`
+  - 如果未指定，会尝试获取
+  - 如果尝试获取失败，则默认`application/octet-stream`或`application/x-zip-compressed`
 - `@Download(compressFormat = "")`
   - 压缩格式，默认`zip`
 - `@Download(forceCompress = false)`
