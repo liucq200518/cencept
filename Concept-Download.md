@@ -480,7 +480,7 @@ public String[] sourceCache() {
 
 使用`@SourceCache`注解配合`@Download`实现下载资源的缓存处理，优先级高于上面两种方式
 
-##### `@SourceCache` 注解说明
+##### `@SourceCache`注解说明
 
 - `@SourceCache(enabled = true)`
   - 是否启用缓存
@@ -580,7 +580,7 @@ public String[] compressCache() {
 
 使用`@CompressCache`注解配合`@Download`实现压缩文件的缓存处理，优先级高于上面两种方式
 
-##### `@CompressCache` 注解说明
+##### `@CompressCache`注解说明
 
 - `@CompressCache(enabled = true)`
   - 是否启用缓存
