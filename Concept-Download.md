@@ -40,7 +40,7 @@ public String http() {
 
 # 集成
 
-当前版本`1.1.2`
+当前版本`1.1.3`
 
 ```gradle
 implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version'
@@ -206,33 +206,27 @@ public List<BusinessModel> businessModel() {
 }
 ```
 
-##### 注解列表说明
+##### 注解说明
 
-- `@SourceModel`
-  - 标注在类上
-  - 表明是一个`Source`
-- `@SourceObject`
-  - 标注在具体下载对象上
-- `@SourceName`
-  - 指定名称
-- `@SourceCharset`
-  - 指定编码
-- `@SourceLength`
-  - 指定长度，及字节数
-- `@SourceAsyncLoad`
-  - 指定是否异步加载
-- `@SourceCacheEnabled`
-  - 指定是否启用缓存
-- `@SourceCacheExisted`
-  - 缓存是否存在
-- `@SourceCachePath`
-  - 缓存目录
+| 注解 | 说明 |
+|-|-|
+|`@SourceModel`|标注在类上<br>表明是一个`Source`|
+|`@SourceObject`|标注在具体下载对象上|
+|`@SourceName`|指定名称|
+|`@SourceCharset`|指定编码|
+|`@SourceLength`|指定长度，即字节数|
+|`@SourceAsyncLoad`|指定是否异步加载|
+|`@SourceCacheEnabled`|指定是否启用缓存|
+|`@SourceCacheExisted`|缓存是否存在|
+|`@SourceCachePath`|缓存目录|
 
 除了`@SourceModel`必须标注在类上
 
 其他注解都可以标注在字段或Get方法上
 
 所有注解子类优先于父类
+
+如果`Source`本身没有对应属性的Set方法或者属性字段，则注解无法生效
 
 ##### 反射字段的数据类型
 
@@ -275,7 +269,7 @@ public interface ValueConvertor<Original, Target> {
 并通过`ValueConversion`注册
 
 ```java
-ValueConversion.helper().register(ValueConvertor);
+ValueConversion.getInstance().register(ValueConvertor);
 ```
 
 ### 自定义支持任意类型的下载数据
@@ -462,14 +456,11 @@ public String[] sourceCache() {
 
 ##### `@SourceCache`注解说明
 
-- `@SourceCache(enabled = true)`
-  - 是否启用缓存
-- `@SourceCache(group = "")`
-  - 分组，会在缓存目录下额外创建一个对应的目录作为实际的缓存目录
-  - 考虑到不同功能出现相同名称的文件等冲突问题
-  - 默认空，不创建，及直接使用配置的缓存目录
-- `@SourceCache(delete = false)`
-  - 下载结束后是否删除缓存文件
+| 参数 | 说明 |
+|-|-|
+|`@SourceCache(enabled = true)`|是否启用缓存|
+|`@SourceCache(group = "")`|分组，会在缓存目录下额外创建一个对应的目录作为实际的缓存目录<br>考虑到不同功能出现相同名称的文件等冲突问题<br>默认空，不创建，及直接使用配置的缓存目录|
+|`@SourceCache(delete = false)`|下载结束后是否删除缓存文件|
 
 # 资源压缩
 
@@ -562,19 +553,12 @@ public String[] compressCache() {
 
 ##### `@CompressCache`注解说明
 
-- `@CompressCache(enabled = true)`
-  - 是否启用缓存
-- `@CompressCache(group = "")`
-  - 分组，会在缓存目录下额外创建一个对应的目录作为实际的缓存目录
-  - 考虑到不同功能出现相同名称的文件等冲突问题
-  - 默认空，不创建，及直接使用配置的缓存目录
-- `@CompressCache(name = "")`
-  - 压缩文件名称
-  - 单下载源会使用该下载源的名称
-  - 多下载源会使用第一个有名称的下载源的名称
-  - 否则使用`CacheNameGenerator`生成，默认使用时间戳
-- `@CompressCache(delete = false)`
-  - 下载结束后是否删除缓存文件
+| 参数 | 说明 |
+|-|-|
+|`@CompressCache(enabled = true)`|是否启用缓存|
+|`@CompressCache(group = "")`|分组，会在缓存目录下额外创建一个对应的目录作为实际的缓存目录<br>考虑到不同功能出现相同名称的文件等冲突问题<br>默认空，不创建，及直接使用配置的缓存目录|
+|`@CompressCache(name = "")`|压缩文件名称<br>单下载源会使用该下载源的名称<br>多下载源会使用第一个有名称的下载源的名称<br>否则使用`CacheNameGenerator`生成，默认使用时间戳|
+|`@SourceCache(enabled = true)`|下载结束后是否删除缓存文件|
 
 # 响应写入
 
