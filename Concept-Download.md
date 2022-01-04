@@ -658,3 +658,4 @@ public DownloadOptions.Rewriter rewrite() {
 |`DownloadContextInitializer`|上下文初始化扩展|
 |`DownloadContextDestroyer`|上下文销毁扩展|
 |`CacheNameGenerator`|缓存名称生成器|
+|`SourceLoaderFactory `|加载器工厂|
