@@ -650,4 +650,11 @@ public DownloadOptions.Rewriter rewrite() {
 
 ```
 
-# Q&A
+# 其他扩展
+
+|扩展接口|说明|
+|-|-|
+|`DownloadContextFactory`|创建下载上下文的工厂|
+|`DownloadContextInitializer`|上下文初始化扩展|
+|`DownloadContextDestroyer`|上下文销毁扩展|
+|`CacheNameGenerator`|缓存名称生成器|
