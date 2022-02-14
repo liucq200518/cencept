@@ -2,12 +2,12 @@
 
 主要用于简单快速的实现一个下载功能
 
-你只需要提供一个文件路径，或者一个http地址，其他的事情都由它帮你完成
+你只需要提供一个文件路径，或者一个http地址，甚至是你的业务对象，其他的事情都由它帮你完成
 
-1. 需要压缩？
+1. 多个文件需要压缩？
 2. 压缩文件的缓存？
 3. 需要下载网络资源？
-4. 网络资源并发请求？
+4. 网络资源的并发？
 5. 网络资源的缓存？
 6. 写输入输出流很麻烦？
 
@@ -34,13 +34,13 @@ public String http() {
 }
 ```
 
-借助`@Download`注解，你可以把被下载的资源写在注解的`source`参数中或者作为方法的返回值`return`
+借助`@Download`注解，你可以把被下载的资源写在`source`参数中或者作为方法的返回值`return`
 
 两者没有任何区别，只是返回值支持动态的对象
 
 # 集成
 
-当前版本`1.1.3`
+当前版本`1.2.0`
 
 ```gradle
 implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version'
@@ -58,7 +58,9 @@ implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version
 
 ### 支持http请求的资源类型
 
-需要手动依赖如下模块
+默认内置了`HttpURLConnection`处理，当然也可以提供了`OkHttp`的方式
+
+使用`OkHttp`需要手动依赖如下模块
 
 ```gradle
 implementation 'com.github.linyuzai:concept-download-source-okhttp:version'
@@ -95,9 +97,8 @@ implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
 public class ConceptDownloadConfig {
 
     @Bean
-    public CoroutinesSourceLoaderInvoker coroutinesSourceLoaderInvoker() {
-        System.out.println("如果需要进行HTTP请求可以使用协程加载！");
-        return new CoroutinesSourceLoaderInvoker();
+    public CoroutinesSourceLoader coroutinesSourceLoader() {
+        return new CoroutinesSourceLoader();
     }
 }
 
@@ -108,12 +109,9 @@ public class ConceptDownloadConfig {
 | 模块 | 说明 |
 |-|-|
 |`concept-download-core`|核心模块|
-|`concept-download-aop`|切面模块|
-|`concept-download-web-servlet`|`Servlet`支持模块<br>`Webflux`暂未支持，有需要再加|
-|`concept-download-source-classpath`|`ClassPathResource`支持|
 |`concept-download-source-okhttp`|基于`OkHttp`的HTTP资源支持|
 |`concept-download-load-coroutines`|基于`Kotlin`协程的I/O请求支持|
-|`concept-download-spring-boot-starter`|`SpringBoot`自动配置模块<br>包含 `core` `aop` `web-servlet` `source-classpath`|
+|`concept-download-spring-boot-starter`|`SpringBoot`自动配置模块|
 
 # `@Download` 注解说明
 
