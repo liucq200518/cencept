@@ -293,7 +293,7 @@ public interface DownloadContextInitializer extends OrderProvider {
 
 ### 销毁上下文
 
-上下文销毁时可以通过`DownloadContextDestroyer`实现自定义初始化逻辑
+上下文销毁时可以通过`DownloadContextDestroyer`实现自定义销毁逻辑
 
 ```java
 /**
