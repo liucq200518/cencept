@@ -339,7 +339,7 @@ public interface DownloadContextFactory {
 | 类型 | 说明 | 依赖 |
 |-|-|-|
 |`FileSource`|支持`File`对象<br>`file:`,`user.home:`,`user-home:`,`user_home:`前缀的字符串||
-|`ClassPathSource`|支持`ClassPathResource`对象<br>`user_home:`前缀的字符串|`classpath:`前缀的字符串||
+|`ClassPathSource`|支持`ClassPathResource`对象<br>`classpath:`前缀的字符串||
 |`TextSource`|支持任意的`String`对象作为文本文件||
 |`HttpSource`|支持`http`地址，基于`HttpURLConnection`||
 |`WebClientSource`|支持http地址，基于`WebClient`，在`webflux`中使用||
