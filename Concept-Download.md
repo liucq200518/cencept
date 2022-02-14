@@ -219,18 +219,13 @@ concept:
 使用`DownloadConfigurer`修改配置
 
 ```java
-/**
- * {@link DownloadConfiguration} 的配置器。
- * 可以在代码中修改全局默认配置。
- */
-public interface DownloadConfigurer {
+@Configuration
+public class ConceptDownloadConfig implements DownloadConfigurer {
 
-    /**
-     * 配置。
-     *
-     * @param configuration {@link DownloadConfiguration}
-     */
-    void configure(DownloadConfiguration configuration);
+    @Override
+    public void configure(DownloadConfiguration configuration) {
+        //可以在这里覆盖配置文件的配置
+    }
 }
 
 ```
