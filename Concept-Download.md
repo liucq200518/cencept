@@ -159,7 +159,24 @@ public class ConceptDownloadConfig {
 
 ### 自定义流程扩展
 
-可以自定义实现`DownloadHandler`并注入到`Spring`的容器中即可
+可以自定义实现`DownloadHandler`并注入到`Spring`的容器中
+
+```java
+/**
+ * 下载处理器。
+ */
+public interface DownloadHandler extends OrderProvider {
+
+    /**
+     * 执行处理。
+     *
+     * @param context {@link DownloadContext}
+     * @param chain   {@link DownloadHandlerChain}
+     */
+    Mono<Void> handle(DownloadContext context, DownloadHandlerChain chain);
+}
+
+```
 
 # 全局配置
 
