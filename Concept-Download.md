@@ -80,7 +80,7 @@ implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version
 
 ### 支持http请求的资源类型
 
-默认内置了`HttpURLConnection`处理，当然也提供了`OkHttp`的方式
+默认内置了`HttpURLConnection`处理，并且也提供了`OkHttp`的方式
 
 使用`OkHttp`需要手动依赖如下模块
 
@@ -224,7 +224,7 @@ public interface DownloadConfigurer {
 
 接口方法返回`DownloadOptions.Rewriter`即可重写下载参数
 
-同时可以设置临时的时间监听器只针对该方法有效
+同时可以设置临时的事件监听器并只对该方法生效
 
 ```java
 @Download(source = "classpath:/download/README.txt")
@@ -276,7 +276,7 @@ public interface DownloadContextInitializer extends OrderProvider {
 
 ### 销毁上下文
 
-上下文创建时可以通过`DownloadContextDestroyer`实现自定义初始化逻辑
+上下文销毁时可以通过`DownloadContextDestroyer`实现自定义初始化逻辑
 
 ```java
 /**
@@ -297,6 +297,22 @@ public interface DownloadContextDestroyer extends OrderProvider {
 
 通过实现`DownloadContextFactory`和`DownloadContext`或`AbstractDownloadContext`并注入到`Spring`容器中
 
+```java
+/**
+ * {@link DownloadContext} 工厂。
+ */
+public interface DownloadContextFactory {
+
+    /**
+     * 创建一个 {@link DownloadContext}。
+     *
+     * @param options {@link DownloadOptions}
+     * @return {@link DownloadContext}
+     */
+    DownloadContext create(DownloadOptions options);
+}
+```
+
 # 下载源创建
 
 所有的下载对象最终都会通过`Source`体现，作为原始的下载数据的抽象提供统一的接口
@@ -304,7 +320,7 @@ public interface DownloadContextDestroyer extends OrderProvider {
 ### 支持的下载类型
 
 | 类型 | 说明 | 依赖 |
-|-|-|-|-|-|-|
+|-|-|-|
 |`FileSource`|支持`File`对象<br>`file:`,`user.home:`,`user-home:`,`user_home:`前缀的字符串||
 |`ClassPathSource`|支持`ClassPathResource`对象<br>`user_home:`前缀的字符串|`classpath:`前缀的字符串||
 |`TextSource`|支持任意的`String`对象作为文本文件||
@@ -432,9 +448,7 @@ ValueConversion.getInstance().register(ValueConvertor);
 
 ### 自定义支持任意类型的下载数据
 
-实现`SourceFactory`或`PrefixSourceFactory`和`Source`或`AbstractSource`或`AbstractLoadableSource`来自定义支持任意的类型和对象
-
-并且将自定义实现的`SourceFactory`注入到`Spring`容器中
+可以自定义实现`SourceFactory`或`PrefixSourceFactory`和`Source`或`AbstractSource`或`AbstractLoadableSource`并注入到`Spring`容器中
 
 ```java
 /**
@@ -471,7 +485,7 @@ public interface SourceFactory extends OrderProvider {
 ### 内置的资源加载器
 
 |类型|说明|兼容|依赖|
-|-|-|-|
+|-|-|-|-|
 |`DefaultSourceLoader`|按顺序加载，适用于本地文件，默认|`webmvc` `webflux`||
 |`SchedulerSourceLoader`|依赖线程池加载，适合网络资源|`webmvc`||
 |`CoroutinesSourceLoader`|依赖协程加载，适合网络资源|`webmvc`|`load-coroutines`|
@@ -484,7 +498,7 @@ public interface SourceFactory extends OrderProvider {
 
 ### 自定义加载方式
 
-可以自定义实现`SourceLoader`或`ConcurrentSourceLoader`
+可以自定义实现`SourceLoader`或`ConcurrentSourceLoader`并注入到`Spring`容器中
 
 ```java
 /**
@@ -633,7 +647,7 @@ public class ConceptDownloadConfig implements DownloadConfigurer {
     @Override
     public void configure(DownloadConfiguration configuration) {
         configuration.getCompress().getCache().setEnabled(true);
-        configuration.getCompress().getCache().setPath("/");
+        configuration.getCompress().getCache().setPath("缓存路径");
         configuration.getCompress().getCache().setDelete(false);
     }
 ```
@@ -739,28 +753,28 @@ public interface DownloadWriter extends OrderProvider {
 
 | 事件 | 说明 |
 |-|-|
-|`AfterContextInitializedEvent`|是否启用缓存|
-|`AfterContextDestroyedEvent`|分组，会在缓存目录下额外创建一个对应的目录作为实际的缓存目录<br>考虑到不同功能出现相同名称的文件等冲突问题<br>默认空，不创建，及直接使用配置的缓存目录|
-|`{Source}CreatedEvent`|压缩文件名称<br>单下载源会使用该下载源的名称<br>多下载源会使用第一个有名称的下载源的名称<br>否则使用`CacheNameGenerator`生成，默认使用时间戳|
-|`AfterSourceCreatedEvent`|下载结束后是否删除缓存文件|
-|`SourceCacheDeletedEvent`|下载结束后是否删除缓存文件|
-|`SourceReleasedEvent`|下载结束后是否删除缓存文件|
-|`Load{HttpSource}Event`|下载结束后是否删除缓存文件|
-|`AfterSourceLoadedEvent`|下载结束后是否删除缓存文件|
-|`SourceAlreadyLoadedEvent`|下载结束后是否删除缓存文件|
-|`SourceLoadedCacheUsedEvent`|下载结束后是否删除缓存文件|
-|`SourceLoadingProgressEvent`|下载结束后是否删除缓存文件|
-|`AfterSourceCompressedEvent`|下载结束后是否删除缓存文件|
-|`SourceCompressionFormatEvent`|下载结束后是否删除缓存文件|
-|`SourceNoCompressionEvent`|下载结束后是否删除缓存文件|
-|`SourceMemoryCompressionEvent`|下载结束后是否删除缓存文件|
-|`SourceFileCompressionEvent`|下载结束后是否删除缓存文件|
-|`SourceCompressedCacheUsedEvent`|下载结束后是否删除缓存文件|
-|`SourceCompressingProgressEvent`|下载结束后是否删除缓存文件|
-|`CompressionCacheDeletedEvent`|下载结束后是否删除缓存文件|
-|`CompressionReleasedEvent`|下载结束后是否删除缓存文件|
-|`AfterResponseWrittenEvent`|下载结束后是否删除缓存文件|
-|`ResponseWritingProgressEvent`|下载结束后是否删除缓存文件|
+|`AfterContextInitializedEvent`|上下文初始化之后发布|
+|`AfterContextDestroyedEvent`|上下文销毁之后发布|
+|`{Source}CreatedEvent`|各种`Source`创建之后发布|
+|`AfterSourceCreatedEvent`|所有`Source`创建之后发布|
+|`SourceCacheDeletedEvent`|`Source`缓存删除之后发布|
+|`SourceReleasedEvent`|`Source`资源释放之后发布|
+|`SourceAlreadyLoadedEvent`|重复加载时发布|
+|`SourceLoadedCacheUsedEvent`|加载使用缓存时发布|
+|`Load{HttpSource}Event`|需要网络请求加载时发布|
+|`SourceLoadingProgressEvent`|加载进度更新时发布|
+|`AfterSourceLoadedEvent`|所有加载完成之后发布|
+|`SourceCompressedCacheUsedEvent`|压缩使用缓存时发布|
+|`SourceCompressionFormatEvent`|压缩格式确定时发布|
+|`SourceNoCompressionEvent`|不压缩时发布|
+|`SourceMemoryCompressionEvent`|使用内存压缩时发布|
+|`SourceFileCompressionEvent`|使用文件压缩时发布|
+|`SourceCompressingProgressEvent`|压缩进度更新时发布|
+|`AfterSourceCompressedEvent`|压缩完成之后发布|
+|`CompressionCacheDeletedEvent`|压缩缓存删除之后发布|
+|`CompressionReleasedEvent`|压缩资源释放之后发布|
+|`ResponseWritingProgressEvent`|响应写入进度更新时发布|
+|`AfterResponseWrittenEvent`|响应写入之后发布|
 
 ### 事件监听
 
@@ -792,14 +806,58 @@ public interface DownloadEventPublisher {
 
 # 控制台日志
 
+日志通过特定的`DownloadEventListener`实现
 
+### 日志类型
 
-# 其他扩展
-
-|扩展接口|说明|
+| 日志 | 说明 |
 |-|-|
-|`DownloadContextFactory`|创建下载上下文的工厂|
-|`DownloadContextInitializer`|上下文初始化扩展|
-|`DownloadContextDestroyer`|上下文销毁扩展|
-|`CacheNameGenerator`|缓存名称生成器|
-|`SourceLoaderFactory `|加载器工厂|
+|`StandardDownloadLogger`|标准流程日志，每个流程相关的事件都会打印|
+|`ProgressCalculationLogger`|进度计算日志，包括加载进度，压缩进度，响应写入进度。|
+|`TimeSpentCalculationLogger`|时间计算日志|
+
+### 配置文件配置
+
+```yaml
+concept:
+  download:
+    logger:
+      enabled: true #日志总开关
+      standard:
+        enabled: true #标准流程日志是否启用
+      progress:
+        enabled: true #进度计算日志是否启用，包括加载进度，压缩进度，写入响应进度
+        duration: 500 #进度计算日志输出间隔，ms
+        percentage: true #进度计算日志是否使用百分比输出
+      time-spent:
+        enabled: true #时间计算日志是否启用
+```
+
+### 代码全局配置
+
+```java
+@Configuration
+public class ConceptDownloadConfig implements DownloadConfigurer {
+
+    @Override
+    public void configure(DownloadConfiguration configuration) {
+        configuration.getLogger().setEnabled(true);
+        configuration.getLogger().getStandard().setEnabled(true);
+        configuration.getLogger().getProgress().setEnabled(true);
+        configuration.getLogger().getProgress().setDuration(500);
+        configuration.getLogger().getProgress().setPercentage(true);
+        configuration.getLogger().getTimeSpent().setEnabled(true);
+    }
+```
+
+# 缓存名称
+
+默认将使用`Source`的名称或当前时间戳作为名称
+
+### 自定义缓存名称
+
+可以自定义实现`CacheNameGenerator`或`AbstractCacheNameGenerator`并注入到`Spring`容器中
+
+# Range支持
+
+还在测试阶段，可以使用但可能存在问题
