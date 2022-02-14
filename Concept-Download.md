@@ -58,7 +58,7 @@ implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version
 
 ### 支持http请求的资源类型
 
-默认内置了`HttpURLConnection`处理，当然也可以提供了`OkHttp`的方式
+默认内置了`HttpURLConnection`处理，当然也提供了`OkHttp`的方式
 
 使用`OkHttp`需要手动依赖如下模块
 
@@ -75,6 +75,8 @@ implementation 'com.github.linyuzai:concept-download-source-okhttp:version'
 ```
 
 ### Kotlin协程实现网络资源的并发请求
+
+仅支持`webmvc`不支持`webflux`
 
 需要手动依赖如下模块
 
@@ -118,16 +120,18 @@ public class ConceptDownloadConfig {
 | 参数 | 说明 |
 |-|-|
 |`@Download(source = {})`|需要下载的内容，但是优先级低于返回值<br>如果方法返回值不为`null`则会使用返回值作为下载的内容|
-|`@Download(inline = false)`|如果为`true`，可以直接在浏览器预览<br>需要配合`contentType`，如图片或视频，默认`false`|
+|`@Download(inline = false)`|如果为`true`，可以直接在浏览器预览<br>需要配合`contentType`，如图片或视频，默认`false`<br>视频文件目前存在一些问题，还在测试阶段|
 |`@Download(filename = "")`|指定下载时浏览器上显示的名称<br>如果不指定则会获取下载内容的名称，如文件则使用文件名|
 |`@Download(contentType = "")`|如果未指定，会尝试获取<br>如果尝试获取失败，则默认`application/octet-stream`<br>或`application/x-zip-compressed`|
 |`@Download(compressFormat = "")`|压缩格式，默认`zip`|
-|`@Download(forceCompress = false)`|强制压缩<br>如果为`true`，不管下载的对象有几个都会压缩<br>如果为`false`，有多个下载对象时压缩，只有一个下载对象时不压缩|
+|`@Download(forceCompress = false)`|强制压缩<br>如果为`true`，不管下载的文件有几个都会压缩<br>如果为`false`，有多个文件时压缩，只有一个文件时不压缩|
 |`@Download(charset = "")`|如果下载包含中文的文本文件出现乱码，可以尝试指定编码|
-|`@Download(headers = {})`|统一的响应头，每2个为一组容|
+|`@Download(headers = {})`|统一的响应头，每2个为一组|
 |`@Download(extra = "")`|额外的数据，当需要自行编写额外流程业务时可能会用到|
 
 # 整体流程
+
+
 
 整个下载流程由`DownloadHandler`和`DownloadHandlerChain`实现链式处理
 
