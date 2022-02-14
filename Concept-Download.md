@@ -38,6 +38,8 @@ public String http() {
 
 两者没有任何区别，只是返回值支持动态的对象
 
+兼容`webmvc`和`webflux`
+
 需要注意`webflux`中需要返回`DownloadMono`并且方法返回值类型固定为`Mono<Void>`，因为`webflux`会校验返回值的类型
 
 ```java
