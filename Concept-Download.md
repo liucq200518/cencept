@@ -155,11 +155,22 @@ public class ConceptDownloadConfig {
 
 # 整体流程
 
-![整体架构](https://github.com/Linyuzai/concept/blob/master/concept-download/concept-download-core/img/architecture.png)
-
 ![整体架构](https://github.com/Linyuzai/concept/blob/master/concept-download/concept-download-core/img/architecture-v.png)
 
 整个下载流程由`DownloadHandler`和`DownloadHandlerChain`实现链式处理
+
+| 序号 | 步骤 | 说明 |
+|-|-|-|
+|1.|全局配置|全局配置`DownloadConfiguration`支持配置文件和`DownloadConfigurer`配置<br>只在服务启动时配置一次|
+|2.|切面拦截|拦截方法上的`@Download`注解|
+|3.|参数构建|结合注解与全局配置`DownloadConfiguration`构建参数`DownloadOptions`<br>方法返回`DownloadOptions.Rewriter`可以重写参数|
+|4.|创建上下文|上下文`DownloadContext`用于下载过程中的数据传递与共享<br>通过`DownloadContextFactory`创建|
+|5.|初始化上下文|支持自定义`DownloadContextInitializer`实现初始化逻辑|
+|6.|解析适配下载数据|基于`DownloadHandler`实现`CreateSourceHandler`<br>通过自定义`Source`和`SourceFactory`支持任意类型数据的扩展|
+|7.|预加载数据|基于`DownloadHandler`实现`LoadSourceHandler`<br>可实现`SourceLoader`自定义加载流程|
+|8.|压缩|基于`DownloadHandler`实现`CompressSourceHandler`<br>可实现`SourceCompressor`自定义压缩逻辑|
+|9.|写入响应|基于`DownloadHandler`实现`WriteResponseHandler`<br>抽象`DownloadResponse`和`DownloadWriter`执行写入操作<br>`DownloadResponse`用于兼容`webmvc`和`webflux`<br>可自定义`DownloadWriter`用于处理输入输出流|
+|10.|销毁上下文|支持自定义`DownloadContextDestroyer`实现销毁逻辑|
 
 ### 自定义流程扩展
 
