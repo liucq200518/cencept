@@ -886,3 +886,7 @@ public class ConceptDownloadConfig implements DownloadConfigurer {
 # Range支持
 
 还在测试阶段，可以使用但可能存在问题
+
+# Bug
+
+- 当加载失败或压缩失败时，会遗留错误的缓存文件，预计下个版本修复
