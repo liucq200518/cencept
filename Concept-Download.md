@@ -893,4 +893,4 @@ public class ConceptDownloadConfig implements DownloadConfigurer {
 
 # Todo
 
-- 可以根据数据大小动态返回是否需要压缩
+- 考虑可以根据数据大小动态返回是否需要压缩或缓存的配置，具体看是否有需求
