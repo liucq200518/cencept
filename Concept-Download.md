@@ -157,6 +157,8 @@ public class ConceptDownloadConfig {
 
 ![整体架构](https://github.com/Linyuzai/concept/blob/master/concept-download/concept-download-core/img/architecture.png)
 
+![整体架构](https://github.com/Linyuzai/concept/blob/master/concept-download/concept-download-core/img/architecture-v.png)
+
 整个下载流程由`DownloadHandler`和`DownloadHandlerChain`实现链式处理
 
 ### 自定义流程扩展
