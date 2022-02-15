@@ -890,3 +890,7 @@ public class ConceptDownloadConfig implements DownloadConfigurer {
 # Bug
 
 - 当加载失败或压缩失败时，会遗留错误的缓存文件，预计下个版本修复
+
+# Todo
+
+- 可以根据数据大小动态返回是否需要压缩
