@@ -838,7 +838,7 @@ public interface DownloadEventPublisher {
 | 日志 | 说明 |
 |-|-|
 |`StandardDownloadLogger`|标准流程日志，每个流程相关的事件都会打印|
-|`ProgressCalculationLogger`|进度计算日志，包括加载进度，压缩进度，响应写入进度。|
+|`ProgressCalculationLogger`|进度计算日志，包括加载进度，压缩进度，响应写入进度|
 |`TimeSpentCalculationLogger`|时间计算日志|
 
 ### 配置文件配置
