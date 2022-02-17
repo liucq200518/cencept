@@ -129,9 +129,7 @@ SyncWaitingConcept concept = new ConditionSyncWaitingConcept.Builder()
 
 同时提供了`QueueSyncWaiterRecycler`可以缓存固定数量的`SyncWaiter`
 
-`SyncWaiterContainer`和`SyncWaiterRecycler`的默认实现时线程不安全的
-
-因为`ConditionSyncWaitingConcept`的操作是加锁的
+因为`ConditionSyncWaitingConcept`的操作是加锁的，所以`SyncWaiterContainer`和`SyncWaiterRecycler`的默认实现是线程不安全的
 
 但是如果你需要将`SyncWaiterContainer`和`SyncWaiterRecycler`公用给多个`SyncWaitingConcept`
 
@@ -143,15 +141,17 @@ SyncWaitingConcept concept = new ConditionSyncWaitingConcept.Builder()
 
 简单来说，就是我们用一个`key`调用了`waitSync`的方法后
 
-在数据还未返回，即还未调用`notifyAsync`
+在数据还未返回，即还未调用`notifyAsync`时
 
-这时我们再使用相同的`key`调用一次`waitSync`将不会触发业务逻辑的调用
+我们再使用相同的`key`调用一次`waitSync`将不会触发业务逻辑的调用
 
 而是会排队等待上一个等待结束后（返回或超时）继续后面的逻辑
 
-在调用`waitSync`时可以同时指定`queuingTime`作为排队时间限制（小于等于0时则无限排队等待）
+防止在数据回调时无法区分是哪次调用
 
-所以并不建议在业务中允许相同的`key`出现，此实现仅仅是为了容错考虑
+所以在调用`waitSync`时可以同时指定`queuingTime`作为排队时间限制（小于等于0时则无限排队等待）
+
+因此并不建议在业务中允许相同的`key`出现，此实现仅仅是为了容错考虑
 
 # 原理
 
