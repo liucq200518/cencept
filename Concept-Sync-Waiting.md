@@ -127,6 +127,8 @@ SyncWaitingConcept concept = new ConditionSyncWaitingConcept.Builder()
 
 `SyncWaiterRecycler`用于回收复用`SyncWaiter`，默认为`DisposableSyncWaiterRecycler`不进行回收复用
 
+同时提供了`QueueSyncWaiterRecycler`可以缓存固定数量的`SyncWaiter`
+
 `SyncWaiterContainer`和`SyncWaiterRecycler`的默认实现时线程不安全的
 
 因为`ConditionSyncWaitingConcept`的操作是加锁的
@@ -151,3 +153,8 @@ SyncWaitingConcept concept = new ConditionSyncWaitingConcept.Builder()
 
 所以并不建议在业务中允许相同的`key`出现，此实现仅仅是为了容错考虑
 
+# 原理
+
+主要通过`Condition.await`阻塞线程，`Condition.signalAll`唤醒线程
+
+图待画
