@@ -1,6 +1,6 @@
 # 概述
 
-主要将异步回调的功能场景封装成同步等待返回
+主要将异步回调的功能场景封装成同步返回
 
 # 示例说明
 
@@ -10,7 +10,7 @@
 
 所以在下发了一条命令之后无法直接获得对应的结果
 
-而改库能十分方便的将异步回调转换成同步返回，使用方式如下
+而该库能十分方便的将异步回调转换成同步返回
 
 ```java
 @RestController
@@ -55,4 +55,22 @@ public class SyncWaitingController {
     }
 }
 ```
+
+# 集成
+
+当前版本`1.0.0`
+
+```gradle
+implementation 'com.github.linyuzai:concept-sync-waiting:version'
+```
+
+```xml
+<dependency>
+  <groupId>com.github.linyuzai</groupId>
+  <artifactId>concept-sync-waiting</artifactId>
+  <version>version</version>
+</dependency>
+```
+
+# 使用
 
