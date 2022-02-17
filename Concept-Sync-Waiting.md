@@ -157,4 +157,4 @@ SyncWaitingConcept concept = new ConditionSyncWaitingConcept.Builder()
 
 主要通过`Condition.await`阻塞线程，`Condition.signalAll`唤醒线程
 
-图待画
+![sync_waiting_process](https://user-images.githubusercontent.com/18523183/154452733-b28c8615-5952-498f-b9b5-f62b2947b605.jpg)
