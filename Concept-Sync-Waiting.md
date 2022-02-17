@@ -97,7 +97,7 @@ Object value = concept.waitSync(key, new SyncCaller() {
 
 最后当接收到异步返回的数据时，调用`notifyAsync`方法唤醒之前阻塞的线程即可得到接收到的数据
 
-需要传入`key`一般需要在返回数据中附带回来，`value`作为接收到的数据
+需要传入`key`一般在返回数据中附带回来，`value`作为接收到的数据
 
 ```java
 concept.notifyAsync(key, value);
