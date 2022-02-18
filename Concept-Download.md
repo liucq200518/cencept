@@ -65,14 +65,14 @@ public Mono<Void> http() {
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-download-spring-boot-starter:1.2.0'
+implementation 'com.github.linyuzai:concept-download-spring-boot-starter:1.2.2'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-download-spring-boot-starter</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.2</version>
 </dependency>
 ```
 
@@ -897,9 +897,13 @@ public class ConceptDownloadConfig implements DownloadConfigurer {
 
 ### 列表
 
+##### 1.2.2
+
+- 修复设置自定义`DownloadResponse`时空指针异常
+
 ### 依赖
 
 | core | source-okhttp | load-coroutines |
 |-|-|-|
 |1.2.0|1.2.0|1.2.0|
-|1.2.1|-|-|
+|1.2.2|-|-|
