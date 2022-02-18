@@ -64,17 +64,15 @@ public Mono<Void> http() {
 
 # 集成
 
-当前版本`1.2.0`
-
 ```gradle
-implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version'
+implementation 'com.github.linyuzai:concept-download-spring-boot-starter:1.2.0'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-download-spring-boot-starter</artifactId>
-  <version>version</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
@@ -87,14 +85,14 @@ implementation 'com.github.linyuzai:concept-download-spring-boot-starter:version
 使用`OkHttp`需要手动依赖如下模块
 
 ```gradle
-implementation 'com.github.linyuzai:concept-download-source-okhttp:version'
+implementation 'com.github.linyuzai:concept-download-source-okhttp:1.2.0'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-download-source-okhttp</artifactId>
-  <version>version</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
@@ -105,14 +103,14 @@ implementation 'com.github.linyuzai:concept-download-source-okhttp:version'
 需要手动依赖如下模块
 
 ```gradle
-implementation 'com.github.linyuzai:concept-download-load-coroutines:version'
+implementation 'com.github.linyuzai:concept-download-load-coroutines:1.2.0'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-download-load-coroutines</artifactId>
-  <version>version</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
