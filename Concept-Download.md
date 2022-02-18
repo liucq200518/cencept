@@ -892,3 +892,14 @@ public class ConceptDownloadConfig implements DownloadConfigurer {
 # Todo
 
 - 考虑可以根据数据大小动态返回是否需要压缩或缓存的配置，具体看是否有需求
+
+# 版本
+
+### 列表
+
+### 依赖
+
+| core | source-okhttp | load-coroutines |
+|-|-|-|
+|1.2.0|1.2.0|1.2.0|
+|1.2.1|-|-|
