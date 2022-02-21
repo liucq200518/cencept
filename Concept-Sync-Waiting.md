@@ -60,17 +60,15 @@ public class SyncWaitingController {
 
 # 集成
 
-当前版本`1.0.0`
-
 ```gradle
-implementation 'com.github.linyuzai:concept-sync-waiting:version'
+implementation 'com.github.linyuzai:concept-sync-waiting:1.0.0'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-sync-waiting</artifactId>
-  <version>version</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
