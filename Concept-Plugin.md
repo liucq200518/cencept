@@ -71,3 +71,14 @@ public class ConceptPluginSample {
 
 # 集成
 
+```gradle
+implementation 'com.github.linyuzai:concept-plugin-jar:1.0.0'
+```
+
+```xml
+<dependency>
+  <groupId>com.github.linyuzai</groupId>
+  <artifactId>concept-plugin-jar</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
