@@ -48,6 +48,8 @@ public class ConceptPluginSample {
 
 调用`load`方法传入文件地址就会回调`jar`中匹配到的类，如果没有匹配到则不会触发回调
 
+### 批量提取
+
 当然如果存在多个符合条件的`Class`可以直接指定集合类型
 
 ```java
@@ -68,6 +70,10 @@ public class ConceptPluginSample {
             .build();
 }
 ```
+
+### 动态匹配
+
+
 
 # 集成
 
