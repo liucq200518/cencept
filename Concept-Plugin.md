@@ -82,3 +82,23 @@ implementation 'com.github.linyuzai:concept-plugin-jar:1.0.0'
   <version>1.0.0</version>
 </dependency>
 ```
+
+# 插件加载流程
+
+# 插件自动加载
+
+# 插件提取器
+
+# 插件过滤器
+
+# 插件解析器
+
+# 插件匹配器
+
+# 插件转换器
+
+# 插件格式器
+
+# 插件类加载器
+
+# 插件需要依赖其他jar
