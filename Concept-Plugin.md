@@ -28,7 +28,7 @@ public class ConceptPluginSample {
 
                 @Override
                 public void onExtract(Class<? extends CustomPlugin> plugin) {
-                    //匹配回调
+                    //回调
                 }
             })
             .build();
@@ -47,4 +47,27 @@ public class ConceptPluginSample {
 创建一个`JarPluginConcept`并添加一个类提取器`ClassExtractor`，指定提取`CustomPlugin.class`或是其子类
 
 调用`load`方法传入文件地址就会回调`jar`中匹配到的类，如果没有匹配到则不会触发回调
+
+当然如果存在多个符合条件的`Class`可以直接指定集合类型
+
+```java
+public class ConceptPluginSample {
+
+    /**
+     * 插件提取配置
+     */
+    private final JarPluginConcept concept = new JarPluginConcept.Builder()
+            //添加类提取器
+            .addExtractor(new ClassExtractor<List<Class<? extends CustomPlugin>>>() {
+
+                @Override
+                public void onExtract(List<Class<? extends CustomPlugin>> plugin) {
+                    //回调
+                }
+            })
+            .build();
+}
+```
+
+# 集成
 
