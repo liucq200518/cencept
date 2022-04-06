@@ -48,8 +48,6 @@ public class ConceptPluginSample {
 
 调用`load`方法传入文件地址就会回调`jar`中匹配到的类，如果没有匹配到则不会触发回调
 
-### 批量提取
-
 当然如果存在多个符合条件的`Class`可以直接指定集合类型
 
 ```java
@@ -71,10 +69,6 @@ public class ConceptPluginSample {
 }
 ```
 
-### 动态匹配
-
-
-
 # 集成
 
 ```gradle
@@ -89,9 +83,11 @@ implementation 'com.github.linyuzai:concept-plugin-jar:1.0.0'
 </dependency>
 ```
 
-# 插件加载流程
+# 插件动态匹配
 
 # 插件自动加载
+
+# 插件加载流程
 
 # 插件提取器
 
@@ -107,4 +103,4 @@ implementation 'com.github.linyuzai:concept-plugin-jar:1.0.0'
 
 # 插件类加载器
 
-# 插件需要依赖其他jar
+# 插件需要依赖其他`jar`时的注意事项
