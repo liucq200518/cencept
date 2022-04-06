@@ -6,7 +6,7 @@
 
 `java`中自带有`spi`，不过功能有限，是以类加载作为基础概念
 
-而本库是以插件作为概念，类加载作为一种插件的具体实现方式
+而本库是以插件作为基础概念，类加载作为一种插件的具体实现方式
 
 插件可以是一个`jar`文件，一段`java`代码，一个`Excel`文件...
 
@@ -43,3 +43,8 @@ public class ConceptPluginSample {
     }
 }
 ```
+
+创建一个`JarPluginConcept`并添加一个类提取器`ClassExtractor`，指定提取`CustomPlugin.class`或是其子类
+
+调用`load`方法传入文件地址就会回调`jar`中匹配到的类，如果没有匹配到则不会触发回调
+
