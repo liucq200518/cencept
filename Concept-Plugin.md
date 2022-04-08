@@ -83,7 +83,60 @@ implementation 'com.github.linyuzai:concept-plugin-jar:1.0.0'
 </dependency>
 ```
 
+# 支持类型
+
+|类型|说明|数据结构|
+|-|-|-|
+|类|支持提取`Class`|`Map<String, Class<? extends CustomPlugin>>`<br>`List<Class<? extends CustomPlugin>>`<br>`Set<Class<? extends CustomPlugin>>`<br>`Collection<Class<? extends CustomPlugin>>`<br>`Class<? extends CustomPlugin>`|
+|实例|支持提取实例，支持能够使用无参构造器实例化的类|`Map<String, CustomPlugin>`<br>`List<CustomPlugin>`<br>`Set<CustomPlugin>`<br>`Collection<CustomPlugin>`<br>`CustomPlugin`|
+|`Properties`文件|支持提取后缀为`.properties`的文件|`Map<String, Properties>`<br>`List<Properties>`<br>`Set<Properties>`<br>`Collection<Properties>`<br>`Properties`<br>`Map<String, Map<String, String>>`<br>`List<Map<String, String>>`<br>`Set<Map<String, String>>`<br>`Collection<Map<String, String>>`<br>`Map<String, String>`|
+|任意文件内容|支持提取任意的文件内容（`jar`中会排除`.class`和`.properties`）|`Map<String, byte[]>`<br>`List<byte[]>`<br>`Set<byte[]>`<br>`Collection<byte[]>`<br>`byte[]`<br>`Map<String, InputStream>`<br>`List<InputStream>`<br>`Set<InputStream>`<br>`Collection<InputStream>`<br>`InputStream``Map<String, String>`<br>`List<String>`<br>`Set<String>`<br>`Collection<String>`<br>`String`<br>|
+|插件对象|可以获得类加载器，`URL`等数据|`Plugin`<br>`JarPlugin`|
+|上下文|插件加载时的中间数据等|`PluginContext`|
+
 # 插件动态匹配
+
+动态匹配可以支持任意类型与数量的插件匹配
+
+```java
+public class ConceptPluginSample {
+
+    /**
+     * 插件提取配置
+     */
+    private final JarPluginConcept concept = new JarPluginConcept.Builder()
+            //添加类提取器
+            .extractTo(this)
+            .build();
+
+    @OnPluginExtract
+    public void onPluginExtract(Class<? extends CustomPlugin> pluginClass, Properties properties) {
+        //任意一个参数匹配上都会触发回调
+    }
+
+    /**
+     * 加载一个 jar 插件
+     *
+     * @param filePath jar 文件路径
+     */
+    public void load(String filePath) {
+        concept.load(filePath);
+    }
+}
+```
+
+当我们既要获得某些指定的类又想要同时获得配置文件（假设包里定义了一个`properties`文件）
+
+可以直接定义一个方法，设置参数为我们需要提取的类和配置文件，再在方法上标注`@OnPluginExtract`
+
+然后使用`extractTo`方法将定义了上述方法的对象传入就行了
+
+### 注解支持
+
+动态匹配还提供了更精准化的注解配置
+
+|注解|说明||
+|-|-|
 
 # 插件自动加载
 
@@ -95,11 +148,15 @@ implementation 'com.github.linyuzai:concept-plugin-jar:1.0.0'
 
 # 插件解析器
 
+### 动态解析
+
 # 插件匹配器
 
 # 插件转换器
 
 # 插件格式器
+
+# 插件事件
 
 # 插件类加载器
 
