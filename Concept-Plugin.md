@@ -87,7 +87,7 @@ implementation 'com.github.linyuzai:concept-plugin-jar:1.0.0'
 
 |类型|说明|数据结构|
 |-|-|-|
-|类|支持提取`Class`|`Map<String, Class<? extends CustomPlugin>>`<br>`List<Class<? extends CustomPlugin>>`<br>`Set<Class<? extends CustomPlugin>>`<br>`Collection<Class<? extends CustomPlugin>>`<br>`Class<? extends CustomPlugin>`|
+|类|支持提取`Class`|`Map<String, Class<? extends CustomPlugin>>`<br>`List<Class<CustomPlugin>>`<br>`Set<Class<CustomPlugin>>`<br>`Collection<Class<CustomPlugin>>`<br>`Class<CustomPlugin>`|
 |实例|支持提取实例，支持能够使用无参构造器实例化的类|`Map<String, CustomPlugin>`<br>`List<CustomPlugin>`<br>`Set<CustomPlugin>`<br>`Collection<CustomPlugin>`<br>`CustomPlugin`|
 |`Properties`文件|支持提取后缀为`.properties`的文件|`Map<String, Properties>`<br>`List<Properties>`<br>`Set<Properties>`<br>`Collection<Properties>`<br>`Properties`<br>`Map<String, Map<String, String>>`<br>`List<Map<String, String>>`<br>`Set<Map<String, String>>`<br>`Collection<Map<String, String>>`<br>`Map<String, String>`|
 |任意文件内容|支持提取任意的文件内容（`jar`中会排除`.class`和`.properties`）|`Map<String, byte[]>`<br>`List<byte[]>`<br>`Set<byte[]>`<br>`Collection<byte[]>`<br>`byte[]`<br>`Map<String, InputStream>`<br>`List<InputStream>`<br>`Set<InputStream>`<br>`Collection<InputStream>`<br>`InputStream``Map<String, String>`<br>`List<String>`<br>`Set<String>`<br>`Collection<String>`<br>`String`<br>|
