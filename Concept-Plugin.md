@@ -69,7 +69,7 @@ public class ConceptPluginSample {
 }
 ```
 
-# 集成
+# 集成（还未发布）
 
 ```gradle
 implementation 'com.github.linyuzai:concept-plugin-jar:1.0.0'
@@ -157,6 +157,8 @@ public class ConceptPluginSample {
 
 - `@PluginProperties("concept-plugin.a")`可以直接得到对应的`String`值（只能是`String`没有做类型转换）
 - `@PluginProperties("concept-plugin.map.**")`可以获得`concept-plugin.map`为前缀的`Map<String, String>`
+
+当存在多个能匹配上的对象（类，配置文件等等）时，可以通过上述注解保证唯一或是使用集合类
 
 由于匹配字符串使用的都是`Spring`中的`AntPathMatcher`，所有注解都支持通配符，如`@PluginPackage("com.github.linyuzai.concept.**.plugin")`
 
