@@ -137,14 +137,28 @@ public class ConceptPluginSample {
 
 可以直接定义一个方法，设置参数为我们需要提取的类和配置文件，再在方法上标注`@OnPluginExtract`
 
-然后使用`extractTo`方法将定义了上述方法的对象传入就行了
+然后使用`extractTo`将定义了上述方法的对象传入就行了
 
 ### 注解支持
 
 动态匹配还提供了更精准化的注解配置
 
-|注解|说明||
+|注解|说明|
 |-|-|
+|`@PluginPath`|路径匹配|
+|`@PluginName`|名称匹配|
+|`@PluginProperties`|`properties`文件匹配|
+|`@PluginPackage`|包名匹配|
+|`@PluginClassName`|类名匹配|
+|`@PluginClass`|类匹配|
+|`@PluginAnnotation`|类上注解匹配|
+
+其中`@PluginProperties`可以单独指定`key`
+
+- `@PluginProperties("concept-plugin.a")`可以直接得到对应的`String`值（只能是`String`没有做类型转换）
+- `@PluginProperties("concept-plugin.map.**")`可以获得`concept-plugin.map`为前缀的`Map<String, String>`
+
+由于匹配字符串使用的都是`Spring`中的`AntPathMatcher`，所有注解都支持通配符，如`@PluginPackage("com.github.linyuzai.concept.**.plugin")`
 
 # 插件自动加载
 
