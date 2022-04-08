@@ -164,6 +164,12 @@ public class ConceptPluginSample {
 
 # 插件自动加载
 
+支持通过监听本地文件目录变化来自动加载插件
+
+默认使用`WatchService`来监听文件目录，提供了`JarNotifier`来自动触发加载
+
+
+
 # 插件加载流程
 
 # 插件提取器
