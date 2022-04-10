@@ -208,6 +208,20 @@ public class ConceptPluginSample {
 
 # 插件加载流程
 
+- 通过插件工厂`PluginFactory`生成一个插件`Plugin`（`JarPlugin`支持解析文件路径，文件对象和`URL`对象）
+- 准备插件`Plugin#prepare()`（通过`JarURLConnection`建立和`jar`的连接）
+- 通过插件上下文工厂`PluginContextFactory`生成一个插件上下文`PluginContext`
+- 初始化上下文`PluginContext#initialize()`
+- 调用插件解析链解析插件`PluginResolver#resolve()`（解析`jar`内容）
+  - 通过插件匹配器进行匹配`PluginMatcher#match()`（匹配内容，如匹配`Class`或`properties`）
+  - 通过插件转换器进行转换`PluginConvertor#convert()`（转换内容，如配置文件转成`json`格式的字符串）
+  - 通过插件格式器格式化`PluginFormatter#format()`（格式化，如果当使用`List`接收时格式化成对应类型）
+- 提取插件（回调对应的`PluginExtractor#extract()`或是动态匹配的方法）
+- 销毁上下文`PluginContext#destroy`
+- 释放插件资源`Plugn#release()`（断开和`jar`的连接）
+
+# 插件工厂
+
 # 插件提取器
 
 # 插件过滤器
