@@ -166,9 +166,45 @@ public class ConceptPluginSample {
 
 支持通过监听本地文件目录变化来自动加载插件
 
-默认使用`WatchService`来监听文件目录，提供了`JarNotifier`来自动触发加载
+默认使用`WatchService`来监听文件目录，提供了`JarNotifier`来自动触发加载卸载
 
+```java
+@Slf4j
+public class ConceptPluginSample {
 
+    //自动加载器
+    private final PluginAutoLoader loader = new WatchServicePluginAutoLoader.Builder()
+            .locations(new PluginLocation.Builder()
+                    //监听目录
+                    .path("/Users/concept/plugin")
+                    //所有jar
+                    .filter(it -> it.endsWith(".jar"))
+                    .build())
+            //指定线程池
+            .executor(Executors.newSingleThreadExecutor())
+            //增删改时触发自动加载，自动重新加载，自动卸载
+            .onNotify(new JarNotifier(concept))
+            //异常回调
+            .onError(e -> log.error("Plugin auto load error", e))
+            .build();
+
+    /**
+     * 开始监听
+     */
+    @PostConstruct
+    private void start() {
+        loader.start();
+    }
+
+    /**
+     * 结束监听
+     */
+    @PreDestroy
+    private void stop() {
+        loader.stop();
+    }
+}
+```
 
 # 插件加载流程
 
