@@ -210,17 +210,41 @@ public class ConceptPluginSample {
 
 - 通过插件工厂`PluginFactory`生成一个插件`Plugin`（`JarPlugin`支持解析文件路径，文件对象和`URL`对象）
 - 准备插件`Plugin#prepare()`（通过`JarURLConnection`建立和`jar`的连接）
-- 通过插件上下文工厂`PluginContextFactory`生成一个插件上下文`PluginContext`
+- 通过插件上下文工厂`PluginContextFactory`生成一个插件上下文`PluginContext`（上下文用于缓存解析过程中的中间数据）
 - 初始化上下文`PluginContext#initialize()`
 - 调用插件解析链解析插件`PluginResolver#resolve()`（解析`jar`内容）
   - 通过插件匹配器进行匹配`PluginMatcher#match()`（匹配内容，如匹配`Class`或`properties`）
   - 通过插件转换器进行转换`PluginConvertor#convert()`（转换内容，如配置文件转成`json`格式的字符串）
-  - 通过插件格式器格式化`PluginFormatter#format()`（格式化，如果当使用`List`接收时格式化成对应类型）
+  - 通过插件格式器格式化`PluginFormatter#format()`（格式化，如使用`List`接收时格式化成对应类型）
 - 提取插件（回调对应的`PluginExtractor#extract()`或是动态匹配的方法）
 - 销毁上下文`PluginContext#destroy`
 - 释放插件资源`Plugn#release()`（断开和`jar`的连接）
 
-# 插件工厂
+# 插件
+
+作为插件的统一抽象`Plugin`
+
+针对`jar`实现了`JarPlugin`
+
+### 插件工厂
+
+插件工厂`PluginFactory`用于将各种对象适配成插件对象
+
+|工厂|说明|
+|-|-|
+|`JarPathPluginFactory`|支持文件路径|
+|`JarFilePluginFactory`|支持`File`对象|
+|`JarURLPluginFactory`|支持`jar`协议的`URL`（jar:file:/xxx!/）|
+
+# 插件上下文
+
+插件上下文`PluginContext`用于缓存插件加载期间的中间数据
+
+### 插件上下文工厂
+
+插件上下文工厂`PluginContextFactory`默认实现`DefaultPluginContextFactory`生成`DefaultPluginContext`
+
+`DefaultPluginContext`默认使用`LinkedHashMap`缓存数据
 
 # 插件提取器
 
