@@ -69,6 +69,8 @@ public class ConceptPluginSample {
 }
 ```
 
+[支持的提取器类型在这里](#插件提取器)
+
 # 集成（还未发布）
 
 ```gradle
