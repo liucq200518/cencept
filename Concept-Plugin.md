@@ -227,9 +227,7 @@ public class ConceptPluginSample {
 
 ### 插件上下文工厂
 
-插件上下文工厂`PluginContextFactory`默认实现`DefaultPluginContextFactory`生成`DefaultPluginContext`
-
-`DefaultPluginContext`默认使用`LinkedHashMap`缓存数据
+插件上下文工厂`PluginContextFactory`用来创建插件上下文
 
 可以通过`JarPluginConcept.Builder#contextFactory`添加自定义上下文工厂
 
@@ -357,12 +355,6 @@ new ModifierFilter(Modifier::isInterface, Modifier::isAbstract).negate();
 
 通过`JarPluginConcept.Builder#addEventListener`添加
 
-### 事件发布者
-
-事件发布者`PluginEventPublisher`用于发布事件
-
-可以通过`JarPluginConcept.Builder#eventPublisher`自定义
-
 |事件|说明|
 |-|-|
 |`PluginCreatedEvent`|插件创建事件|
@@ -379,6 +371,12 @@ new ModifierFilter(Modifier::isInterface, Modifier::isAbstract).negate();
 |`PluginAutoLoadEvent`|插件自动加载（监听文件新增）|
 |`PluginAutoReloadEvent`|插件自动重新加载事件（监听文件修改）|
 |`PluginAutoUnloadEvent`|插件自动卸载事件（监听文件删除）|
+
+### 事件发布者
+
+事件发布者`PluginEventPublisher`用于发布事件
+
+可以通过`JarPluginConcept.Builder#eventPublisher`自定义
 
 # 插件加载日志
 
