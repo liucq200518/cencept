@@ -239,6 +239,7 @@ public class ConceptPluginSample {
 |`ContentExtractor`|支持提取任意的文件内容（`jar`中会排除`.class`和`.properties`）|`Map<String, byte[]>`<br>`List<byte[]>`<br>`Set<byte[]>`<br>`Collection<byte[]>`<br>`byte[][]`<br>`byte[]`<br>`Map<String, InputStream>`<br>`List<InputStream>`<br>`Set<InputStream>`<br>`Collection<InputStream>`<br>`InputStream[]`<br>`InputStream`<br>`Map<String, String>`<br>`List<String>`<br>`Set<String>`<br>`Collection<String>`<br>`String[]`<br>`String`<br>|
 |`PluginObjectExtractor`|可以获得类加载器，`URL`等数据|`Plugin`<br>`JarPlugin`|
 |`PluginContextExtractor`|插件加载时的中间数据等|`PluginContext`|
+|`DynamicExtractor`<br>`JarDynamicExtractor`|动态插件加载||
 
 当使用`Map`时，对应的`key`将返回文件的路径和名称，如`com/github/linyuzai/concept/sample/plugin/CustomPluginImpl.class`
 
@@ -250,7 +251,46 @@ public class ConceptPluginSample {
 
 # 插件过滤器
 
+插件过滤器`PluginFilter`用于过滤插件，减少解析的内容
+
+|过滤器|说明|
+|-|-|
+|`ClassFilter`|通过类过滤|
+|`ClassNameFilter`|通过全限定类名过滤|
+|`PackageFilter`|通过包名过滤|
+|`AnnotationFilter`|通过类上标注的注解过滤|
+|`ModifierFilter`|通过访问修饰符过滤|
+|`PathFilter`|通过路径过滤|
+|`NameFilter`|通过名称过滤|
+
+其中`ModifierFilter`用法
+
+```java
+//是接口或是抽象类
+new ModifierFilter(Modifier::isInterface, Modifier::isAbstract);
+```
+
+可以通过`PluginFilter#negate()`进行取反
+
+```java
+//不是接口并且不是抽象类
+new ModifierFilter(Modifier::isInterface, Modifier::isAbstract).negate();
+```
+
 # 插件解析器
+
+插件解析器`PluginResolver`用于解析插件内容
+
+|解析器|说明|
+|-|-|
+|`JarEntryResolver`|通过类过滤|
+|`JarPathNameResolver`|通过全限定类名过滤|
+|`JarClassNameResolver`|通过包名过滤|
+|`JarClassResolver`|通过访问修饰符过滤|
+|`JarInstanceResolver`|通过路径过滤|
+|`PropertiesNameResolver `|通过名称过滤|
+|`JarPropertiesResolver `|通过名称过滤|
+|`JarByteArrayResolver`|通过类上标注的注解过滤|
 
 ### 动态解析
 
