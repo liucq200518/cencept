@@ -283,25 +283,76 @@ new ModifierFilter(Modifier::isInterface, Modifier::isAbstract).negate();
 
 |解析器|说明|
 |-|-|
-|`JarEntryResolver`|通过类过滤|
-|`JarPathNameResolver`|通过全限定类名过滤|
-|`JarClassNameResolver`|通过包名过滤|
-|`JarClassResolver`|通过访问修饰符过滤|
-|`JarInstanceResolver`|通过路径过滤|
-|`PropertiesNameResolver `|通过名称过滤|
-|`JarPropertiesResolver `|通过名称过滤|
-|`JarByteArrayResolver`|通过类上标注的注解过滤|
+|`JarEntryResolver`|用于获得`JarEntry`集合|
+|`JarPathNameResolver`|用于获得路径名称集合|
+|`JarClassNameResolver`|将路径名称解析为全限定类名|
+|`JarClassResolver`|根据全限定类名加载类|
+|`JarInstanceResolver`|通过类实例化成对象|
+|`PropertiesNameResolver `|获得`.properties`后缀的路径名称|
+|`JarPropertiesResolver `|将`.properties`后缀的路径名称加载到`Properties`|
+|`JarByteArrayResolver`|读取路径名称对应的内容加载到内存|
 
 ### 动态解析
 
+根据添加的插件提取器动态添加插件处理器
+
+比如，当我们只添加了类提取器，那么`properties`相关的解析器就不会被添加，对应的解析逻辑也不会执行
+
+可以近似的理解为`Gradle`或`Maven`的依赖传递
+
 # 插件匹配器
+
+插件匹配器`PluginMatcher`用于在插件解析出来的内容中根据插件提取器中定义的类型来匹配对应的内容
+
+|匹配器|说明|
+|-|-|
+|`ClassMatcher`|用于匹配类|
+|`InstanceMatcher`|用于匹配实例|
+|`PropertiesMatcher`|用于匹配`.properties`文件|
+|`ContentMatcher`|用于匹配文件内容|
+|`PluginObjectMatcher`|用于匹配插件对象|
+|`PluginContextMatcher `|用于匹配上下文|
 
 # 插件转换器
 
+插件转换器`PluginConvertor`用于将插件匹配器匹配到的内容根据插件提取器中定义的类型来进行转换
+
+如将我们获取的`Properties`对象转换为`Map<String, String>`
+
+|转换器|说明|
+|-|-|
+|`ByteArrayToInputStreamMapConvertor`|用于将`Map<?, byte[]>`转换为`Map<Object, InputStream>`|
+|`ByteArrayToStringMapConvertor`|用于将`Map<?, byte[]>`转换为`Map<Object, String>`|
+|`PropertiesToMapMapConvertor`|用于将`Map<?, Properties>`转换为`Map<Object, Map<String, String>>`|
+
 # 插件格式器
 
+插件格式器`PluginFormatter`用于将插件插件转换器转换后的内容根据插件提取器中定义的类型来格式化
+
+如将我们解析之后的`Map<String, Class<?>>`格式化为`List<Class<?>>`
+
+|格式器|说明|
+|-|-|
+|`MapToMapFormatter`|用于将`Map<?, ?>`转换为`Map<Object, Object>`|
+|`MapToListFormatter`|用于将`Map<?, ?>`转换为`List<Object>`|
+|`MapToSetFormatter`|用于将`Map<?, ?>`转换为`Set<Object>`|
+|`MapToArrayFormatter`|用于将`Map<?, ?>`转换为`E[]`，对应类型的数组|
+|`MapToObjectFormatter`|用于将`Map<?, ?>`转换为`Object`，获取唯一一个元素|
+
 # 插件事件
+
+在插件加载的过程中会发布一系列的事件`PluginEvent`
 
 # 插件类加载器
 
 # 插件需要依赖其他`jar`时的注意事项
+
+当我们的`A.jar`需要依赖`B.jar`时，将两个`jar`都进行一次加载即可
+
+但是需要注意，要在`A.jar`中的插件触发`B.jar`中类的类加载之前加载`B.jar`
+
+简单来说就是先加载`B.jar`在加载`A.jar`
+
+或是等所有的`jar`都加载完成后，再调用插件中的方法
+
+如果已经发生无法加载`B.jar`中的类的情况，可以重新加载一遍`A.jar`并替换之前实例化的插件即可重新触发类加载
