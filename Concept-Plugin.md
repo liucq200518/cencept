@@ -213,6 +213,8 @@ public class ConceptPluginSample {
 
 插件工厂`PluginFactory`用于将各种对象适配成插件对象
 
+可以通过`JarPluginConcept.Builder#addFactory`添加自定义插件工厂
+
 |工厂|说明|
 |-|-|
 |`JarPathPluginFactory`|支持文件路径|
@@ -229,9 +231,13 @@ public class ConceptPluginSample {
 
 `DefaultPluginContext`默认使用`LinkedHashMap`缓存数据
 
+可以通过`JarPluginConcept.Builder#contextFactory`添加自定义上下文工厂
+
 # 插件提取器
 
 插件提取器`PluginExtractor`用于回调提取到的插件
+
+通过`JarPluginConcept.Builder#addExtractor`添加
 
 |提取器|说明|数据结构|
 |-|-|-|
@@ -254,6 +260,8 @@ public class ConceptPluginSample {
 # 插件过滤器
 
 插件过滤器`PluginFilter`用于过滤插件，减少解析的内容
+
+通过`JarPluginConcept.Builder#addFilter`添加
 
 |过滤器|说明|
 |-|-|
@@ -282,6 +290,8 @@ new ModifierFilter(Modifier::isInterface, Modifier::isAbstract).negate();
 # 插件解析器
 
 插件解析器`PluginResolver`用于解析插件内容
+
+通过`JarPluginConcept.Builder#addResolver`添加
 
 |解析器|说明|
 |-|-|
@@ -345,6 +355,14 @@ new ModifierFilter(Modifier::isInterface, Modifier::isAbstract).negate();
 
 在插件加载的过程中会发布一系列的事件`PluginEvent`
 
+通过`JarPluginConcept.Builder#addEventListener`添加
+
+### 事件发布者
+
+事件发布者`PluginEventPublisher`用于发布事件
+
+可以通过`JarPluginConcept.Builder#eventPublisher`自定义
+
 |事件|说明|
 |-|-|
 |`PluginCreatedEvent`|插件创建事件|
@@ -362,7 +380,35 @@ new ModifierFilter(Modifier::isInterface, Modifier::isAbstract).negate();
 |`PluginAutoReloadEvent`|插件自动重新加载事件（监听文件修改）|
 |`PluginAutoUnloadEvent`|插件自动卸载事件（监听文件删除）|
 
+# 插件加载日志
+
+基于事件实现的简单的日志输出类`PluginLoadLogger`
+
+```java
+@Slf4j
+public class ConceptPluginSample {
+
+    private final JarPluginConcept concept = new JarPluginConcept.Builder()
+            .extractTo(this)
+            //插件加载日志
+            .addEventListener(new PluginLoadLogger(log::info))
+            .build();
+
+    //省略其他代码。。。
+}
+```
+
 # 插件类加载器
+
+`jar`中的类通过`JarPluginClassLoader`加载
+
+当`findClass`方法无法加载到对应的类时，会遍历其他的插件类加载器尝试加载
+
+### 插件类加载器工厂
+
+插件类加载器工厂`PluginClassLoaderFactory`用于提供插件类加载器
+
+可以通过`JarPluginConcept.Builder#pluginClassLoaderFactory`自定义
 
 # 插件需要依赖其他`jar`时的注意事项
 
