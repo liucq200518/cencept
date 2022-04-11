@@ -69,7 +69,7 @@ public class ConceptPluginSample {
 }
 ```
 
-[支持的提取器类型在这里](#插件提取器)
+### [支持的提取器类型在这里](#插件提取器)
 
 # 集成（还未发布）
 
@@ -96,7 +96,7 @@ public class ConceptPluginSample {
      * 插件提取配置
      */
     private final JarPluginConcept concept = new JarPluginConcept.Builder()
-            //添加类提取器
+            //将插件提取到...
             .extractTo(this)
             .build();
 
@@ -344,6 +344,23 @@ new ModifierFilter(Modifier::isInterface, Modifier::isAbstract).negate();
 # 插件事件
 
 在插件加载的过程中会发布一系列的事件`PluginEvent`
+
+|事件|说明|
+|-|-|
+|`PluginCreatedEvent`|插件创建事件|
+|`PluginPreparedEvent`|插件准备事件|
+|`PluginReleasedEvent`|插件资源释放事件|
+|`PluginLoadedEvent`|插件加载事件|
+|`PluginUnloadedEvent`|插件卸载事件|
+|`PluginResolvedEvent`|插件解析事件|
+|`PluginFilteredEvent`|插件过滤事件|
+|`PluginMatchedEvent`|插件匹配事件|
+|`PluginConvertedEvent`|插件转换事件|
+|`PluginFormattedEvent`|插件格式化事件|
+|`PluginExtractedEvent`|插件提取事件|
+|`PluginAutoLoadEvent`|插件自动加载（监听文件新增）|
+|`PluginAutoReloadEvent`|插件自动重新加载事件（监听文件修改）|
+|`PluginAutoUnloadEvent`|插件自动卸载事件（监听文件删除）|
 
 # 插件类加载器
 
