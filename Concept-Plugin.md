@@ -318,8 +318,8 @@ new ModifierFilter(Modifier::isInterface, Modifier::isAbstract).negate();
 |-|-|
 |`ClassMatcher`|用于匹配类|
 |`InstanceMatcher`|用于匹配实例|
-|`PropertiesMatcher`|用于匹配`.properties`文件|
-|`ContentMatcher`|用于匹配文件内容|
+|`PropertiesMatcher`|用于匹配`.properties`文件对象，如果`Properties`或`Map<String, String>`|
+|`ContentMatcher`|用于匹配文件内容对象，如`byte[]`或`InputStream`或`String`|
 |`PluginObjectMatcher`|用于匹配插件对象|
 |`PluginContextMatcher `|用于匹配上下文|
 
@@ -353,7 +353,7 @@ new ModifierFilter(Modifier::isInterface, Modifier::isAbstract).negate();
 
 在插件加载的过程中会发布一系列的事件`PluginEvent`
 
-通过`JarPluginConcept.Builder#addEventListener`添加
+通过`JarPluginConcept.Builder#addEventListener`添加监听
 
 |事件|说明|
 |-|-|
