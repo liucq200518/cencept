@@ -71,7 +71,7 @@ public class ConceptPluginSample {
 
 ### [支持的提取器类型在这里](#插件提取器)
 
-# 集成（还未发布）
+# 集成
 
 ```gradle
 implementation 'com.github.linyuzai:concept-plugin-jar:1.0.0'
