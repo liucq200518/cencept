@@ -16,6 +16,10 @@
 
 # 示例说明
 
+假设有一个`jar`包，我们想要提取其中`CustomPlugin.class`这个类或者子类
+
+首先创建一个`JarPluginConcept`并添加一个类提取器`ClassExtractor`，指定提取`CustomPlugin.class`或是其子类
+
 ```java
 public class ConceptPluginSample {
 
@@ -32,21 +36,15 @@ public class ConceptPluginSample {
                 }
             })
             .build();
-
-    /**
-     * 加载一个 jar 插件
-     *
-     * @param filePath jar 文件路径
-     */
-    public void load(String filePath) {
-        concept.load(filePath);
-    }
 }
 ```
 
-创建一个`JarPluginConcept`并添加一个类提取器`ClassExtractor`，指定提取`CustomPlugin.class`或是其子类
+然后调用`load`方法传入文件地址就会回调`jar`中匹配到的类，如果没有匹配到则不会触发回调
 
-调用`load`方法传入文件地址就会回调`jar`中匹配到的类，如果没有匹配到则不会触发回调
+```java
+//传入文件路径
+concept.load(filePath);
+```
 
 当然如果存在多个符合条件的`Class`可以直接指定集合类型
 
