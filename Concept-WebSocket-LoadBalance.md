@@ -10,7 +10,7 @@
 
 也可以通过简单的自定义来支持更复杂的业务
 
-# 集成
+# 集成（未发布）
 
 ```gradle
 implementation 'com.github.linyuzai:concept-connection-loadbalance-spring-boot-starter:1.0.0'
@@ -59,3 +59,28 @@ public class WsController {
 
 # 配置文件
 
+```yaml
+concept:
+  websocket:
+    type: auto #AUTO/JAVAX/SERVLET/REACTIVE
+    server: #服务配置
+      default-endpoint: #默认端点
+        enabled: true #是否启用默认端点
+        path-selector: #Path选择器
+          enabled: true #是否启用Path选择器
+      heartbeat: #心跳配置
+        enabled: true #是否启用心跳
+        period: 0 #心跳间隔，单位ms，默认1分钟
+        timeout: 0 #超时时间，单位ms，默认3.5分钟，3次心跳间隔
+    load-balance: #负载均衡（转发）配置
+      protocol: ws #服务间连接协议，默认ws
+      logger: true #是否启用日志，互相连接的日志打印
+      monitor: #监控配置
+        enabled: true #是否启用监控
+        period: 0 #轮训间隔
+        logger: true #是否启用日志
+      heartbeat: #心跳配置
+        enabled: true #是否启用心跳
+        period: 0 #心跳间隔，单位ms，默认1分钟
+        timeout: 0 #超时时间，单位ms，默认3.5分钟，3次心跳间隔
+```
