@@ -62,25 +62,25 @@ public class WsController {
 ```yaml
 concept:
   websocket:
-    type: auto #AUTO/JAVAX/SERVLET/REACTIVE
+    type: auto #JAVAX/SERVLET/REACTIVE，AUTO自动适配，默认AUTO
     server: #服务配置
       default-endpoint: #默认端点
-        enabled: true #是否启用默认端点
+        enabled: true #是否启用默认端点，默认true
         path-selector: #Path选择器
-          enabled: true #是否启用Path选择器
+          enabled: true #是否启用Path选择器，默认false
       heartbeat: #心跳配置
-        enabled: true #是否启用心跳
-        period: 0 #心跳间隔，单位ms，默认1分钟
-        timeout: 0 #超时时间，单位ms，默认3.5分钟，3次心跳间隔
+        enabled: true #是否启用心跳，默认true
+        period: 60000 #心跳间隔，单位ms，默认1分钟
+        timeout: 210000 #超时时间，单位ms，默认3.5分钟，3次心跳间隔
     load-balance: #负载均衡（转发）配置
       protocol: ws #服务间连接协议，默认ws
-      logger: true #是否启用日志，互相连接的日志打印
+      logger: true #是否启用日志，互相连接的日志打印，默认true
       monitor: #监控配置
-        enabled: true #是否启用监控
-        period: 0 #轮训间隔
-        logger: true #是否启用日志
+        enabled: true #是否启用监控，默认true
+        period: 30000 #轮训间隔，单位ms，默认30s
+        logger: true #是否启用日志，默认true
       heartbeat: #心跳配置
-        enabled: true #是否启用心跳
-        period: 0 #心跳间隔，单位ms，默认1分钟
-        timeout: 0 #超时时间，单位ms，默认3.5分钟，3次心跳间隔
+        enabled: true #是否启用心跳，默认true
+        period: 60000 #心跳间隔，单位ms，默认1分钟
+        timeout: 210000 #超时时间，单位ms，默认3.5分钟，3次心跳间隔
 ```
