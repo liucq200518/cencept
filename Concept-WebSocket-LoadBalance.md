@@ -73,7 +73,7 @@ concept:
       default-endpoint: #默认端点
         enabled: true #是否启用默认端点，默认true
         path-selector: #Path选择器
-          enabled: true #是否启用Path选择器，默认false
+          enabled: false #是否启用Path选择器，默认false
       heartbeat: #心跳配置
         enabled: true #是否启用心跳，默认true
         period: 60000 #心跳间隔，单位ms，默认1分钟
@@ -178,6 +178,17 @@ concept:
 比如前端连接的`WebSocket`地址为`ws://localhost:8080/concept-websocket/sample`
 
 其中`concept-websocket`为默认的固定前缀，`sample`为我们自定义路径
+
+在配置中启用路径选择器
+
+```yaml
+concept:
+  websocket:
+    server: 
+      default-endpoint: 
+        path-selector: 
+          enabled: true #启用Path选择器
+```
 
 当我们想给所有的`sample`客户端发送消息时
 
