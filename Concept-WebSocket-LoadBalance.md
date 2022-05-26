@@ -135,9 +135,21 @@ concept:
 
 ### 消息编码器
 
+通过`MessageEncoder`在发送消息时进行编码
+
 ### 消息解码器
 
+通过`MessageDecoder`在接收消息时进行解码
+
+### 消息编解码适配器
+
+通过`MessageCodecAdapter`统一编解码器的入口
+
+包括普通客户端收发消息的编解码器，服务实例间订阅消息的编解码器，消息转发的编解码器
+
 ### 消息发送
+
+默认编码为`json`字符串
 
 当一个消息发送时将会适配连接选择器`ConnectionSelector`
 
