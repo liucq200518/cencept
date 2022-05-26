@@ -59,6 +59,10 @@ public class WsController {
 }
 ```
 
+客户端的连接地址为`ws://{服务的地址}/concept-websocket/{自定义路径}`
+
+其中`concept-websocket`为默认的固定前缀
+
 # 配置文件
 
 ```yaml
@@ -145,7 +149,9 @@ concept:
 
 通过`MessageCodecAdapter`统一编解码器的入口
 
-包括普通客户端收发消息的编解码器，服务实例间订阅消息的编解码器，消息转发的编解码器
+- 普通客户端收发消息的编解码器
+- 服务实例间订阅消息的编解码器
+- 消息转发的编解码器
 
 ### 消息发送
 
@@ -161,9 +167,91 @@ concept:
 
 所以可以通过匹配两者来筛选连接以支持复杂的业务场景
 
+##### 给指定路径的客户端发送消息
+
+比如前端连接的`WebSocket`地址为`ws://localhost:8080/concept-websocket/sample`
+
+其中`concept-websocket`为默认的固定前缀，`sample`为我们自定义路径
+
+当我们想给所有的`sample`客户端发送消息时
+
+可以直接使用`PathMessage`来发送消息
+
+```java
+@RestController
+@RequestMapping("/ws")
+public class WsController {
+
+    @Autowired
+    private WebSocketLoadBalanceConcept concept;
+
+    @RequestMapping("/send-path")
+    public void sendPath(@RequestParam String msg) {
+        concept.send(new PathMessage(msg, "sample"));
+    }
+}
+```
+
+##### 给指定用户发送消息
+
+比如前端连接的`WebSocket`地址为`ws://localhost:8080/concept-websocket/user?userId=1`
+
+我们可以通过`LifecycleListener`来监听连接并提取`userId`放到`metadata`中
+
+```java
+@Component
+public class WsLifecycleListener implements LifecycleListener {
+    
+    @Override
+    public void onEstablish(Connection connection) {
+        String userId = ((WebSocketConnection) connection).getQueryParameter("userId");
+        connection.getMetadata().put(UserIdSelector.KEY, userId);
+    }
+
+    @Override
+    public void onClose(Connection connection, Object reason) {
+
+    }
+}
+```
+
+然后注入`UserIdSelector`
+
+```java
+@Configuration
+public class WsConfig {
+
+    @Bean
+    public UserIdSelector userIdSelector() {
+        return new UserIdSelector();
+    }
+}
+```
+
+就可以使用`UserMessage`给指定的用户发送消息了
+
+```java
+@RestController
+@RequestMapping("/ws")
+public class WsController {
+
+    @Autowired
+    private WebSocketLoadBalanceConcept concept;
+
+    @RequestMapping("/send-user")
+    public void sendUser(@RequestParam String msg) {
+        concept.send(new UserMessage(msg, "1"));
+    }
+}
+```
+
 ### 消息接收
 
 通过实现`MessageHandler`接收客户端发送的消息
+
+# 异常处理
+
+通过实现`ErrorHandler`处理异常，默认将会通过`logger`打印
 
 # 事件
 
