@@ -13,13 +13,13 @@
 # 集成（未发布）
 
 ```gradle
-implementation 'com.github.linyuzai:concept-connection-loadbalance-spring-boot-starter:1.0.0'
+implementation 'com.github.linyuzai:concept-websocket-spring-boot-starter:1.0.0'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
-  <artifactId>concept-connection-loadbalance-spring-boot-starter</artifactId>
+  <artifactId>concept-websocket-spring-boot-starter</artifactId>
   <version>1.0.0</version>
 </dependency>
 ```
