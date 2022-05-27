@@ -97,6 +97,8 @@ concept:
 
 ![原理](https://user-images.githubusercontent.com/18523183/170614224-6c33e2f6-9a89-446d-b053-17464beb64f5.svg)
 
+![订阅](https://user-images.githubusercontent.com/18523183/170619554-58169292-83b2-4305-8ad3-0cac77345373.svg)
+
 # 连接订阅
 
 将消息转发抽象为对其他服务实例消息的订阅
