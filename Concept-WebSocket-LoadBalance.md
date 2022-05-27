@@ -63,6 +63,24 @@ public class WsController {
 
 其中`concept-websocket`为默认的固定前缀
 
+# 原理
+
+通过服务间进行相互的`WebSocket`连接来实现消息转发
+
+![原理](https://user-images.githubusercontent.com/18523183/170614224-6c33e2f6-9a89-446d-b053-17464beb64f5.svg)
+
+### 订阅流程
+
+![订阅](https://user-images.githubusercontent.com/18523183/170619554-58169292-83b2-4305-8ad3-0cac77345373.svg)
+
+### 连接管理
+
+![管理](https://user-images.githubusercontent.com/18523183/170669799-466776f6-d591-414c-891d-f17449c853ec.svg)
+
+### 消息发送
+
+![消息](https://user-images.githubusercontent.com/18523183/170673572-f5a62d61-379a-4e69-ac2c-d408076bfa6a.svg)
+
 # 配置文件
 
 ```yaml
@@ -84,23 +102,12 @@ concept:
       monitor: #监控配置
         enabled: true #是否启用监控，默认true
         period: 30000 #轮训间隔，单位ms，默认30s
-        logger: true #是否启用日志，默认true
+        logger: false #是否启用日志，默认false
       heartbeat: #心跳配置
         enabled: true #是否启用心跳，默认true
         period: 60000 #心跳间隔，单位ms，默认1分钟
         timeout: 210000 #超时时间，单位ms，默认3.5分钟，3次心跳间隔
 ```
-
-# 原理
-
-通过服务间进行相互的`WebSocket`连接来实现消息转发
-
-![原理](https://user-images.githubusercontent.com/18523183/170614224-6c33e2f6-9a89-446d-b053-17464beb64f5.svg)
-
-![订阅](https://user-images.githubusercontent.com/18523183/170619554-58169292-83b2-4305-8ad3-0cac77345373.svg)
-
-![管理](https://user-images.githubusercontent.com/18523183/170669799-466776f6-d591-414c-891d-f17449c853ec.svg)
-
 
 # 连接订阅
 
@@ -275,4 +282,4 @@ public class WsController {
 
 # 事件
 
-
+//TODO 事件类型表格
