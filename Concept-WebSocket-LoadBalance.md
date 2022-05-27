@@ -95,7 +95,7 @@ concept:
 
 通过服务间进行相互的`WebSocket`连接来实现消息转发
 
-//TODO 图片
+![原理](https://user-images.githubusercontent.com/18523183/170614224-6c33e2f6-9a89-446d-b053-17464beb64f5.svg)
 
 # 连接订阅
 
@@ -105,7 +105,7 @@ concept:
 
 默认实现了`WebSocket`的双向连接
 
-也可以自定义`ConnectionSubscriber`使用`MQ`或`HTTP`等其他消息转发方式
+可以自定义`ConnectionSubscriber`使用`MQ`或`HTTP`等其他消息转发方式
 
 需要注意，该流程在服务启动后触发，通过`ApplicationRunner`实现
 
@@ -171,11 +171,11 @@ concept:
 
 连接类`Connection`的`metadata`字段用于自定义元数据
 
-所以可以通过匹配两者来筛选连接以支持复杂的业务场景
+可以通过匹配两者来筛选连接以支持复杂的业务场景
 
 ##### 给指定路径的客户端发送消息
 
-比如前端连接的`WebSocket`地址为`ws://localhost:8080/concept-websocket/sample`
+假设前端连接的`WebSocket`地址为`ws://localhost:8080/concept-websocket/sample`
 
 其中`concept-websocket`为默认的固定前缀，`sample`为我们自定义路径
 
@@ -190,9 +190,7 @@ concept:
           enabled: true #启用Path选择器
 ```
 
-当我们想给所有的`sample`客户端发送消息时
-
-可以直接使用`PathMessage`来发送消息
+使用`PathMessage`给所有的`sample`客户端发送消息
 
 ```java
 @RestController
@@ -211,9 +209,9 @@ public class WsController {
 
 ##### 给指定用户发送消息
 
-比如前端连接的`WebSocket`地址为`ws://localhost:8080/concept-websocket/user?userId=1`
+假设前端连接的`WebSocket`地址为`ws://localhost:8080/concept-websocket/user?userId=1`
 
-我们可以通过`LifecycleListener`来监听连接并提取`userId`放到`metadata`中
+通过`LifecycleListener`来监听连接建立并提取`userId`放到`metadata`中
 
 ```java
 @Component
@@ -232,7 +230,7 @@ public class WsLifecycleListener implements LifecycleListener {
 }
 ```
 
-然后注入`UserIdSelector`
+注入`UserIdSelector`
 
 ```java
 @Configuration
@@ -245,7 +243,7 @@ public class WsConfig {
 }
 ```
 
-就可以使用`UserMessage`给指定的用户发送消息了
+使用`UserMessage`给指定的用户发送消息
 
 ```java
 @RestController
