@@ -99,6 +99,9 @@ concept:
 
 ![订阅](https://user-images.githubusercontent.com/18523183/170619554-58169292-83b2-4305-8ad3-0cac77345373.svg)
 
+![管理](https://user-images.githubusercontent.com/18523183/170669799-466776f6-d591-414c-891d-f17449c853ec.svg)
+
+
 # 连接订阅
 
 将消息转发抽象为对其他服务实例消息的订阅
