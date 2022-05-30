@@ -12,7 +12,7 @@
 
 本库同时兼容`Web`和`Webflux`，使用方式上没有任何区别
 
-# 集成（未发布）
+# 集成
 
 ```gradle
 implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:1.0.0'
