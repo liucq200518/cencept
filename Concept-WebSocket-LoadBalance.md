@@ -15,16 +15,18 @@
 # 集成（未发布）
 
 ```gradle
-implementation 'com.github.linyuzai:concept-websocket-spring-boot-starter:1.0.0'
+implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:1.0.0'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
-  <artifactId>concept-websocket-spring-boot-starter</artifactId>
+  <artifactId>concept-websocket-loadbalance-spring-boot-starter</artifactId>
   <version>1.0.0</version>
 </dependency>
 ```
+
+# 使用
 
 在启动类上添加注解`@EnableWebSocketLoadBalanceConcept`启用功能
 
@@ -39,8 +41,6 @@ public class AServiceApplication {
     }
 }
 ```
-
-# 使用
 
 注入`WebSocketLoadBalanceConcept`就可以跨实例发送消息
 
@@ -62,24 +62,6 @@ public class WsController {
 客户端的连接地址为`ws://{服务的地址}/concept-websocket/{自定义路径}`
 
 其中`concept-websocket`为默认的固定前缀
-
-# 原理
-
-通过服务间进行相互的`WebSocket`连接来实现消息转发
-
-![原理](https://user-images.githubusercontent.com/18523183/170614224-6c33e2f6-9a89-446d-b053-17464beb64f5.svg)
-
-### 订阅流程
-
-![订阅](https://user-images.githubusercontent.com/18523183/170619554-58169292-83b2-4305-8ad3-0cac77345373.svg)
-
-### 连接管理
-
-![管理](https://user-images.githubusercontent.com/18523183/170669799-466776f6-d591-414c-891d-f17449c853ec.svg)
-
-### 消息发送
-
-![消息](https://user-images.githubusercontent.com/18523183/170673572-f5a62d61-379a-4e69-ac2c-d408076bfa6a.svg)
 
 # 配置文件
 
@@ -108,6 +90,24 @@ concept:
         period: 60000 #心跳间隔，单位ms，默认1分钟
         timeout: 210000 #超时时间，单位ms，默认3.5分钟，3次心跳间隔
 ```
+
+# 原理
+
+通过服务间进行相互的`WebSocket`连接来实现消息转发
+
+![原理](https://user-images.githubusercontent.com/18523183/170614224-6c33e2f6-9a89-446d-b053-17464beb64f5.svg)
+
+### 订阅流程
+
+![订阅](https://user-images.githubusercontent.com/18523183/170619554-58169292-83b2-4305-8ad3-0cac77345373.svg)
+
+### 连接管理
+
+![管理](https://user-images.githubusercontent.com/18523183/170669799-466776f6-d591-414c-891d-f17449c853ec.svg)
+
+### 消息发送
+
+![消息](https://user-images.githubusercontent.com/18523183/170673572-f5a62d61-379a-4e69-ac2c-d408076bfa6a.svg)
 
 # 连接订阅
 
@@ -282,4 +282,22 @@ public class WsController {
 
 # 事件
 
-//TODO 事件类型表格
+|事件|说明|
+|-|-|
+|`ConnectionLoadBalanceConceptInitializeEvent`|`ConnectionLoadBalanceConcept`初始化|
+|`ConnectionLoadBalanceConceptDestroyEvent`|`ConnectionLoadBalanceConcept`销毁|
+|`ConnectionEstablishEvent`|连接建立|
+|`ConnectionCloseEvent`|连接关闭|
+|`ConnectionCloseErrorEvent`|连接关闭异常|
+|`ConnectionErrorEvent`|连接异常|
+|`ConnectionSubscribeErrorEvent`|连接订阅异常|
+|`MessagePrepareEvent`|消息准备|
+|`MessageSendEvent`|消息发送|
+|`MessageSendErrorEvent`|消息发送异常|
+|`DeadMessageEvent`|当一个消息不会发送给任何一个连接|
+|`MessageDecodeErrorEvent`|消息解码异常|
+|`MessageReceiveEvent`|消息接收|
+|`EventPublishErrorEvent`|事件发布异常|
+|`UnknownCloseEvent`|未知的连接关闭|
+|`UnknownErrorEvent`|未知的连接异常|
+|`UnknownMessageEvent`|未知的消息|
