@@ -15,14 +15,14 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:1.0.0'
+implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:1.0.1'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-websocket-loadbalance-spring-boot-starter</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
@@ -301,3 +301,11 @@ public class WsController {
 |`UnknownCloseEvent`|未知的连接关闭|
 |`UnknownErrorEvent`|未知的连接异常|
 |`UnknownMessageEvent`|未知的消息|
+
+# 默认服务端点配置
+
+可以自定义`DefaultEndpointConfigurer`来配置
+
+`Servlet`环境下会回调`WebSocketHandlerRegistration`
+
+`Reactive`环境下会拿回调`ReactiveWebSocketLoadBalanceHandlerMapping`
