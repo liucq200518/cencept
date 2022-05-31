@@ -15,14 +15,14 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:1.0.1'
+implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:1.0.2'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-websocket-loadbalance-spring-boot-starter</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
