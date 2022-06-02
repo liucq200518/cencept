@@ -295,4 +295,4 @@ public class WsController {
 
 `Servlet`环境下会回调`WebSocketHandlerRegistration`
 
-`Reactive`环境下会拿回调`ReactiveWebSocketServerHandlerMapping`
+`Reactive`环境下会回调`ReactiveWebSocketServerHandlerMapping`
