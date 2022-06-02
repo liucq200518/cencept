@@ -15,14 +15,14 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:1.0.2'
+implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:1.0.3'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-websocket-loadbalance-spring-boot-starter</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 
@@ -74,6 +74,8 @@ concept:
         enabled: true #是否启用默认端点，默认true
         path-selector: #Path选择器
           enabled: false #是否启用Path选择器，默认false
+        user-selector: #User选择器
+          enabled: false #是否启用User选择器，默认false
       heartbeat: #心跳配置
         enabled: true #是否启用心跳，默认true
         period: 60000 #心跳间隔，单位ms，默认1分钟
@@ -223,36 +225,17 @@ public class WsController {
 
 假设前端连接的`WebSocket`地址为`ws://localhost:8080/concept-websocket/user?userId=1`
 
-通过`LifecycleListener`来监听连接建立并提取`userId`放到`metadata`中
+其中`userId`为固定参数名
 
-```java
-@Component
-public class WsLifecycleListener implements LifecycleListener {
-    
-    @Override
-    public void onEstablish(Connection connection) {
-        String userId = ((WebSocketConnection) connection).getQueryParameter("userId");
-        connection.getMetadata().put(UserIdSelector.KEY, userId);
-    }
+在配置中启用路径选择器
 
-    @Override
-    public void onClose(Connection connection, Object reason) {
-
-    }
-}
-```
-
-注入`UserIdSelector`
-
-```java
-@Configuration
-public class WsConfig {
-
-    @Bean
-    public UserIdSelector userIdSelector() {
-        return new UserIdSelector();
-    }
-}
+```yaml
+concept:
+  websocket:
+    server: 
+      default-endpoint: 
+        user-selector: 
+          enabled: true #启用Path选择器
 ```
 
 使用`UserMessage`给指定的用户发送消息
@@ -275,6 +258,10 @@ public class WsController {
 ### 消息接收
 
 通过实现`MessageHandler`接收客户端发送的消息
+
+# 生命周期监听
+
+通过实现`LifecycleListener`监听生命周期
 
 # 异常处理
 
@@ -304,7 +291,7 @@ public class WsController {
 
 # 默认服务端点配置
 
-可以自定义`DefaultEndpointConfigurer`来配置
+可以自定义`DefaultEndpointCustomizer`来配置
 
 `Servlet`环境下会回调`WebSocketHandlerRegistration`
 
