@@ -417,3 +417,12 @@ public class ConceptPluginSample {
 或是等所有的`jar`都加载完成后，再调用插件中的方法
 
 如果已经发生无法加载`B.jar`中的类的情况，可以重新加载一遍`A.jar`并替换之前实例化的插件即可重新触发类加载
+
+# 版本
+
+### 列表
+
+1.0.1
+
+- `AbstractPluginConcept`添加`extractTo`方法
+- 修复`Windows`环境下`JarPathNameResolver`出现的`PatternSyntaxException`的问题
