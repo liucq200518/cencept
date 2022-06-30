@@ -41,4 +41,4 @@ implementation 'com.github.linyuzai:concept-router-spring-boot-starter:1.0.0'
 - Spring Boot 2.2.x (ribbon)
 - Spring Boot 2.0.x (ribbon)
 
-如果集成之后出现报错或不生效请发我`Spring Boot`和`Spring Cloud`版本
+如果集成之后出现报错或不生效请联系我并提供`Spring Boot`和`Spring Cloud`版本以及是否指定了负载均衡组件
