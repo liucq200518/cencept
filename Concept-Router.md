@@ -37,7 +37,7 @@ implementation 'com.github.linyuzai:concept-router-spring-boot-starter:1.0.0'
 
 # 版本适配
 
-- Spring Boot 2.6.x（loadbalancer）
+- Spring Boot 2.6.x (loadbalancer)
 - Spring Boot 2.2.x (ribbon)
 - Spring Boot 2.0.x (ribbon)
 
