@@ -18,12 +18,14 @@ implementation 'com.github.linyuzai:concept-router-spring-boot-starter:1.0.0'
 </dependency>
 ```
 
+只需引入包无需额外的配置
+
+线上环境可以通过`concept.router.enabled=false`关闭功能
+
 # 功能
 
 - gateway指定转发服务
 - feign指定调用服务
-
-只需引入包无需额外的配置
 
 # 管理界面
 
