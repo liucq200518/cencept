@@ -22,6 +22,24 @@ implementation 'com.github.linyuzai:concept-router-spring-boot-starter:1.0.0'
 
 线上环境可以通过`concept.router.enabled=false`关闭功能
 
+# 配置
+
+```yaml
+concept:
+  router:
+    enabled: true #是否启用路由功能
+    logger:
+      enabled: true #是否启用路由日志功能
+    banner:
+      enabled: true #是否输出Banner
+    repository:
+      type: local #路由数据存储类型，内存/本地文件
+      local:
+        path: /concept/router #本地文件的存储位置
+    management:
+      enabled: true #是否启用可视化页面
+```
+
 # 功能
 
 - gateway指定转发服务
