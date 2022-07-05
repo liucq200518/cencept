@@ -4,6 +4,8 @@
 
 为解决这一问题，该库提供了对某些接口指定服务实例的路由功能来提升效率
 
+![management](https://user-images.githubusercontent.com/18523183/177239306-9ef302f4-2921-4af8-9fed-7f6371ddd5ba.png)
+
 # 集成
 
 ```gradle
