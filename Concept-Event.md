@@ -99,6 +99,7 @@ public class EventController {
 
 ### 自定义方式
 
+```java
 @RestController
 @RequestMapping("/concept-event")
 public class EventController {
