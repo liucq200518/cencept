@@ -46,12 +46,16 @@ concept:
           inherit: parent #继承名称为parent的端点配置
           bootstrap-servers:
             - 192.168.30.100:9092
+            - 192.168.30.101:9092
+            - 192.168.30.102:9092
           consumer:
             group-id: kafka1
         kafka2: #端点名称-kafka2
           inherit: parent #继承名称为parent的端点配置
           bootstrap-servers:
-            - 192.168.30.101:9092
+            - 192.168.60.200:9092
+            - 192.168.60.201:9092
+            - 192.168.60.202:9092
           consumer:
             group-id: kafka2
         parent: #作为其他端点的父配置
