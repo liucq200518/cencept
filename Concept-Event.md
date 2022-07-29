@@ -11,14 +11,14 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-event-spring-boot-starter:0.1.0'
+implementation 'com.github.linyuzai:concept-event-spring-boot-starter:0.4.0'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-event-spring-boot-starter</artifactId>
-  <version>0.1.0</version>
+  <version>0.4.0</version>
 </dependency>
 ```
 
@@ -74,5 +74,87 @@ concept:
 
 # 发布事件
 
+### 简单方式
+
+```java
+@RestController
+@RequestMapping("/concept-event")
+public class EventController {
+
+    @Autowired
+    private EventConcept concept;
+
+    @GetMapping("/send")
+    public void send() {
+        concept.event("123").publish();
+    }
+}
+```
+
+需要注意该方式需要配置一些默认的组件
+
+### 自定义方式
+
+@RestController
+@RequestMapping("/concept-event")
+public class EventController {
+
+    @Autowired
+    private EventConcept concept;
+
+    @GetMapping("/send")
+    public void send() {
+        concept.event("123")
+                .exchange(EventExchange) //指定发布到哪些端点（多个Kafka中哪几个）
+                .context(Map) //配置上下文（用于满足自定义数据传递）
+                .encoder(EventEncoder) //指定事件编码器（如把对象转成json）
+                .error(EventErrorHandler) //指定异常处理器（发布异常的后续操作）
+                .publish(EventPublisher); //指定事件发布器（如使用KafkaTemplate给指定的Topic发消息）
+    }
+}
+```
+
+##### 示例
 
 # 接收事件
+
+### 简单方式
+
+```java
+@Configuration
+public class EventSubscriberRegister implements ApplicationRunner {
+
+    @Autowired
+    public EventConcept concept;
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        concept.event().subscribe();//指定事件订阅器
+    }
+}
+```
+
+需要注意该方式需要配置一些默认的组件
+
+### 自定义方式
+
+```java
+@Configuration
+public class EventSubscriberRegister implements ApplicationRunner {
+
+    @Autowired
+    public EventConcept concept;
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        concept.event(Type) //指定事件类型（通过解码器处理）
+                .exchange(EventExchange) //指定订阅哪些端点（多个Kafka中哪几个）
+                .context(Map) //配置上下文（用于满足自定义数据传递）
+                .decoder(EventDecoder) //指定事件解码器（如把json转成对象）
+                .error(EventErrorHandler) //指定异常处理器（订阅或消费异常的后续操作）
+                .subscribe(EventSubscriber); //指定时间订阅器（如订阅哪个Topic）
+    }
+}
+```
+
+##### 示例
