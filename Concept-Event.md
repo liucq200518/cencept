@@ -1,6 +1,6 @@
 # 概述
 
-该库支持在一个项目中（同时）配置多个 `Kafka` 和 `RabbitMQ`(还未集成)
+该库支持在一个项目中（同时）配置多个 `Kafka` 和 `RabbitMQ`
 
 如有必要还可扩展 `ActiveMQ` 或 `RocketMQ` 等任何符合事件模型的组件
 
@@ -11,14 +11,14 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-event-spring-boot-starter:0.4.0'
+implementation 'com.github.linyuzai:concept-event-spring-boot-starter:1.0.0'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-event-spring-boot-starter</artifactId>
-  <version>0.4.0</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
@@ -74,6 +74,33 @@ concept:
 
 `kafka`的配置属性同`spring.kafka`
 
+# 配置RabbitMQ
+
+```yaml
+concept:
+  event:
+    rabbitmq:
+      enabled: true
+      endpoints:
+        rabbitmq1:
+          inherit: parent
+          host: 192.168.30.140
+          template:
+            routing-key: rabbitmq1.dev
+            exchange: rabbitmq1
+        rabbitmq2:
+          inherit: parent
+          host: 192.168.30.141
+          template:
+            routing-key: rabbitmq2.dev
+            exchange: rabbitmq2
+        parent:
+          enabled: false
+          username: admin
+          password: 123456
+          port: 5672
+```
+
 额外提供配置继承可将一些相同的配置提取出来，使用`inherit`属性指定继承的端点
 
 # 发布事件
@@ -90,7 +117,7 @@ public class EventController {
 
     @GetMapping("/send")
     public void send() {
-        concept.event("123").publish();
+        concept.template().publish("msg");
     }
 }
 ```
@@ -109,12 +136,13 @@ public class EventController {
 
     @GetMapping("/send")
     public void send() {
-        concept.event("123")
+        concept.template()
+                .context(KeyValue) //配置上下文（用于满足自定义数据传递）
                 .exchange(EventExchange) //指定发布到哪些端点（多个Kafka中哪几个）
-                .context(Map) //配置上下文（用于满足自定义数据传递）
                 .encoder(EventEncoder) //指定事件编码器（如把对象转成json）
                 .error(EventErrorHandler) //指定异常处理器（发布异常的后续操作）
-                .publish(EventPublisher); //指定事件发布器（如使用KafkaTemplate给指定的Topic发消息）
+                .publisher(EventPublisher) //指定事件发布器（如使用KafkaTemplate给指定的Topic发消息）
+                .publish(Object); //事件对象
     }
 }
 ```
