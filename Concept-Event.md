@@ -35,7 +35,9 @@ public class ConceptSampleApplication {
 }
 ```
 
-# 配置Kafka
+# 配置
+
+### 配置Kafka
 
 ```yaml
 concept:
@@ -74,7 +76,7 @@ concept:
 
 `kafka`的配置属性同`spring.kafka`
 
-# 配置RabbitMQ
+### 配置RabbitMQ
 
 ```yaml
 concept:
@@ -101,6 +103,10 @@ concept:
           port: 5672
 ```
 
+`rabbitmq`的配置属性同`spring.rabbitmq`
+
+### 配置继承
+
 额外提供配置继承可将一些相同的配置提取出来，使用`inherit`属性指定继承的端点
 
 # 发布事件
@@ -117,7 +123,7 @@ public class EventController {
 
     @GetMapping("/send")
     public void send() {
-        concept.template().publish("msg");
+        concept.template().publish(Object);//发布事件
     }
 }
 ```
@@ -162,7 +168,7 @@ public class EventSubscriberRegister implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        concept.event().subscribe();//指定事件订阅器
+        concept.template().subscribe(EventListener);//监听事件
     }
 }
 ```
@@ -180,12 +186,13 @@ public class EventSubscriberRegister implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        concept.event(Type) //指定事件类型（通过解码器处理）
+        concept.template() //指定事件类型（通过解码器处理）
+                .context(KeyValue) //配置上下文（用于满足自定义数据传递）
                 .exchange(EventExchange) //指定订阅哪些端点（多个Kafka中哪几个）
-                .context(Map) //配置上下文（用于满足自定义数据传递）
                 .decoder(EventDecoder) //指定事件解码器（如把json转成对象）
                 .error(EventErrorHandler) //指定异常处理器（订阅或消费异常的后续操作）
-                .subscribe(EventSubscriber); //指定时间订阅器（如订阅哪个Topic）
+                .subscriber(EventSubscriber) //指定时间订阅器（如订阅哪个Topic）
+                .subscribe(EventListener); //监听事件
     }
 }
 ```
