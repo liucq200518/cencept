@@ -43,6 +43,7 @@ public class ConceptSampleApplication {
 concept:
   event:
     kafka:
+      enabled: true #需要手动开启
       endpoints: #在该节点下配置多个kafka，属性同spring.kafka
         kafka1: #端点名称-kafka1
           inherit: parent #继承名称为parent的端点配置
@@ -82,22 +83,22 @@ concept:
 concept:
   event:
     rabbitmq:
-      enabled: true
-      endpoints:
-        rabbitmq1:
-          inherit: parent
+      enabled: true #需要手动开启
+      endpoints: #在该节点下配置多个rabbitmq，属性同spring.rabbitmq
+        rabbitmq1: #端点名称-rabbitmq1
+          inherit: parent #继承名称为parent的端点配置
           host: 192.168.30.140
           template:
             routing-key: rabbitmq1.dev
             exchange: rabbitmq1
-        rabbitmq2:
-          inherit: parent
+        rabbitmq2: #端点名称-rabbitmq2
+          inherit: parent #继承名称为parent的端点配置
           host: 192.168.30.141
           template:
             routing-key: rabbitmq2.dev
             exchange: rabbitmq2
         parent:
-          enabled: false
+          enabled: false #是否启用该端点，这里作为父配置不启用
           username: admin
           password: 123456
           port: 5672
