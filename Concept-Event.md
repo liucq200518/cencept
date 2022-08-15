@@ -184,7 +184,7 @@ public class EventSubscriberRegister implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        concept.template() //指定事件类型（通过解码器处理）
+        concept.template()
                 .context(KeyValue) //配置上下文（用于满足自定义数据传递）
                 .exchange(EventExchange) //指定订阅哪些端点（多个Kafka中哪几个）
                 .decoder(EventDecoder) //指定事件解码器（如把json转成对象）
@@ -370,9 +370,38 @@ RabbitEventEngine.get(EventConcept);
 
 # 事件解码器
 
+抽象为`EventDecoder`
+
+用于在监听到事件时对事件进行解码，默认为`null`，不进行解码处理，可自定义并注入`Spring`容器全局生效
+
+也可通过 [事件引擎自定义配置](#事件引擎自定义配置)/[事件端点自定义配置](#事件端点自定义配置) 的方式配置
+
+手动指定的优先级高于事件端点中的配置
+
+事件端点中的配置优先级高于事件引擎中的配置
+
+事件引擎中的配置优先级高于全局配置
+
+默认提供的事件解码器
+
+|事件解码器|说明|
+|-|-|
+|JacksonEventDecoder|基于Jackson的json解码|
+|SerializationEventDecoder|基于jdk序列化的解码|
+
 # 事件监听器
 
+抽象为`EventListener`
+
+用于在事件订阅时监听数据
+
+`JacksonEventDecoder`可结合`#getType()`方法解析数据
+
+提供`GenericEventListener<T>`自动提取泛型作为`#getType()`返回值
+
 # 异常处理器
+
+
 
 # 事件模版
 
