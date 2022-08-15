@@ -128,7 +128,7 @@ public class EventController {
 }
 ```
 
-需要注意该方式需要配置一些组件 
+需要注意该方式需要提前通过 [事件引擎自定义配置](#事件引擎自定义配置)/[事件端点自定义配置](#事件端点自定义配置) 配置组件 [事件发布器](#事件发布器)/[事件订阅器](#事件订阅器)
 
 ### 自定义方式
 
@@ -153,8 +153,6 @@ public class EventController {
 }
 ```
 
-##### 示例
-
 # 接收事件
 
 ### 简单方式
@@ -173,7 +171,7 @@ public class EventSubscriberRegister implements ApplicationRunner {
 }
 ```
 
-需要注意该方式需要配置一些默认的组件
+需要注意该方式需要提前通过 [事件引擎自定义配置](#事件引擎自定义配置)/[事件端点自定义配置](#事件端点自定义配置) 配置组件 [事件发布器](#事件发布器)/[事件订阅器](#事件订阅器)
 
 ### 自定义方式
 
@@ -197,29 +195,178 @@ public class EventSubscriberRegister implements ApplicationRunner {
 }
 ```
 
-##### 示例
-
 # 事件引擎
+
+抽象为`EventEngine`
+
+表示中间件类型，目前支持 `Kafka` 和 `RabbitMQ`
+
+```java
+//如有需要可以使用该方法获得Kafka事件引擎
+KafkaEventEngine.get(EventConcept);
+
+//如有需要可以使用该方法获得RabbitMQ事件引擎
+RabbitEventEngine.get(EventConcept);
+```
 
 ### 事件引擎工厂
 
+抽象为`EventEngineFactory`
+
+`Kakfa`事件引擎工厂`KafkaEventEngineFactory`，默认实现`KafkaEventEngineFactoryImpl`，可自定义并注入`Spring`容器生效
+
+`RabbitMQ`事件引擎工厂`RabbitEventEngineFactory`，默认实现`RabbitEventEngineFactoryImpl`，可自定义并注入`Spring`容器生效
+
 ### 事件引擎自定义配置
+
+抽象为`EventEngineConfigurer`
+
+`Kakfa`使用`KafkaEventEngineConfigurer`扩展配置，可自定义并注入`Spring`容器生效
+
+`RabbitMQ`使用`RabbitEventEngineConfigurer`扩展配置，可自定义并注入`Spring`容器生效
 
 # 事件端点
 
+抽象为`EventEndpoint`
+
+表示多个`Kafka`和`RabbitMQ`服务（集群）
+
 ### 事件端点工厂
+
+抽象为`EventEndpointFactory`
+
+`Kakfa`事件引擎工厂`KafkaEventEndpointFactory`，默认实现`KafkaEventEndpointFactoryImpl`，可自定义并注入`Spring`容器生效
+
+`RabbitMQ`事件引擎工厂`RabbitEventEndpointFactory`，默认实现`RabbitEventEndpointFactoryImpl`，可自定义并注入`Spring`容器生效
 
 ### 事件端点自定义配置
 
+抽象为`EventEndpointConfigurer`
+
+`Kakfa`使用`KafkaEventEndpointConfigurer`扩展配置，可自定义并注入`Spring`容器生效
+
+`RabbitMQ`使用`RabbitEventEndpointConfigurer`扩展配置，可自定义并注入`Spring`容器生效
+
 # 事件上下文
+
+抽象为`EventContext`
+
+用于事件发布和事件订阅的过程中的数据交互
+
+同时方便用户自定义扩展处理
+
+### 事件上下文工厂
+
+抽象为`EventContextFactory`，默认实现`MapEventContextFactory`，可自定义并注入`Spring`容器生效
 
 # 事件交换机
 
+抽象为`EventExchange`
+
+用于在发布事件或订阅事件时指定对应的事件端点，可自定义并注入`Spring`容器全局生效
+
+手动指定优先级高于全局配置
+
+默认提供的事件交换机
+
+|事件交换机|说明|
+|-|-|
+|EngineExchange|指定一个或多个引擎下的所有端点|
+|EndpointExchange|指定一个引擎下的一个或多个端点|
+|KafkaEngineExchange|指定Kafka所有端点|
+|KafkaEndpointExchange|指定Kafka一个或多个端点|
+|RabbitEngineExchange|指定RabbitMQ所有端点|
+|RabbitEndpointExchange|指定RabbitMQ一个或多个端点|
+|ComposeEventExchange|组合多个事件交换机|
+
 # 事件发布器
+
+抽象为`EventPublisher`
+
+用于指定事件的发布逻辑（一般调用`KafkaTemplate`或`RabbitTemplate`来发送消息）
+
+可基于`KafkaEventPublisher`或`AbstractKafkaEventPublisher`和`RabbitEventPublisher`或`AbstractRabbitEventPublisher`自定义事件发布器
+
+可通过 [事件引擎自定义配置](#事件引擎自定义配置)/[事件端点自定义配置](#事件端点自定义配置) 的方式配置
+
+手动指定的优先级高于事件端点中的配置
+
+事件端点中的配置优先级高于事件引擎中的配置
+
+默认提供的事件发布器
+
+|事件发布器|说明|
+|-|-|
+|TopicKafkaEventPublisher|指定Topic的事件发布器|
+|ConfigurableKafkaEventPublisher|可配置Topic，Partition，Timestamp，Key的事件发布器|
+|DefaultKafkaEventPublisher|基于`KafkaTemplate#sendDefault`的事件发布器|
+|RoutingRabbitEventPublisher|指定exchange和routingKey的事件发布器|
+|ConfigurableRabbitEventPublisher|可配置exchange，routingKey和correlationData的事件发布器|
+|DefaultRabbitEventPublisher|基于`RabbitTemplate#convertAndSend`的事件发布器|
+|ComposeEventPublisher|组合多个事件发布器|
+
+### RabbitMQ初始化
+
+`AbstractRabbitEventPublisher`提供`#binding`方法在发布时创建`Exchange/Queue/Binding`，用法同`BindingBuilder`
 
 # 事件订阅器
 
+抽象为`EventSubscriber`
+
+用于指定事件的订阅逻辑
+
+可基于`KafkaEventSubscriber`或`AbstractKafkaEventSubscriber`和`RabbitEventSubscriber`或`AbstractRabbitEventSubscriber`自定义事件订阅器
+
+可通过 [事件引擎自定义配置](#事件引擎自定义配置)/[事件端点自定义配置](#事件端点自定义配置) 的方式配置
+
+手动指定的优先级高于事件端点中的配置
+
+事件端点中的配置优先级高于事件引擎中的配置
+
+默认提供的事件订阅器
+
+|事件订阅器|说明|
+|-|-|
+|TopicKafkaEventSubscriber|指定Topic的事件订阅器|
+|TopicPatternKafkaEventSubscriber|指定Topic Pattern的事件订阅器|
+|TopicPartitionOffsetKafkaEventSubscriber|指定TopicPartitionOffset的事件订阅器|
+|DefaultKafkaEventSubscriber|基于KafkaListenerEndpoint的事件订阅器|
+|QueueRabbitEventSubscriber|指定Queue的事件订阅器|
+|DefaultRabbitEventSubscriber|基于RabbitListenerEndpoint的事件订阅器|
+|ComposeEventSubscriber|组合多个事件订阅器|
+
+### 订阅句柄
+
+抽象为`Subscription`
+
+事件订阅器订阅之后会返回一个订阅句柄
+
+可通过订阅句柄取消订阅`Subscription#unsubscribe()`
+
+### RabbitMQ初始化
+
+`AbstractRabbitEventSubscriber`提供`#binding`方法在订阅时创建`Exchange/Queue/Binding`，用法同`BindingBuilder`
+
 # 事件编码器
+
+抽象为`EventEncoder`
+
+用于在事件发布时对事件进行编码，默认为`null`，不进行编码处理，可自定义并注入`Spring`容器全局生效
+
+也可通过 [事件引擎自定义配置](#事件引擎自定义配置)/[事件端点自定义配置](#事件端点自定义配置) 的方式配置
+
+手动指定的优先级高于事件端点中的配置
+
+事件端点中的配置优先级高于事件引擎中的配置
+
+事件引擎中的配置优先级高于全局配置
+
+默认提供的事件编码器
+
+|事件编码器|说明|
+|-|-|
+|JacksonEventEncoder|基于Jackson的json编码|
+|SerializationEventDecoder|基于jdk序列化的编码|
 
 # 事件解码器
 
