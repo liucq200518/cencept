@@ -189,7 +189,7 @@ public class EventSubscriberRegister implements ApplicationRunner {
                 .exchange(EventExchange) //指定订阅哪些端点（多个Kafka中哪几个）
                 .decoder(EventDecoder) //指定事件解码器（如把json转成对象）
                 .error(EventErrorHandler) //指定异常处理器（订阅或消费异常的后续操作）
-                .subscriber(EventSubscriber) //指定时间订阅器（如订阅哪个Topic）
+                .subscriber(EventSubscriber) //指定事件订阅器（如订阅哪个Topic）
                 .subscribe(EventListener); //监听事件
     }
 }
@@ -213,17 +213,71 @@ RabbitEventEngine.get(EventConcept);
 
 抽象为`EventEngineFactory`
 
-`Kakfa`事件引擎工厂`KafkaEventEngineFactory`，默认实现`KafkaEventEngineFactoryImpl`，可自定义并注入`Spring`容器生效
+`Kakfa`事件引擎工厂`KafkaEventEngineFactory`，默认实现`KafkaEventEngineFactoryImpl`
 
-`RabbitMQ`事件引擎工厂`RabbitEventEngineFactory`，默认实现`RabbitEventEngineFactoryImpl`，可自定义并注入`Spring`容器生效
+可自定义并注入`Spring`容器生效
+
+```java
+@Component
+public class CustomKafkaEventEngineFactory implements KafkaEventEngineFactory {
+
+    @Override
+    public KafkaEventEngine create(KafkaEventProperties config) {
+        //自定义
+        return null;
+    }
+}
+```
+
+`RabbitMQ`事件引擎工厂`RabbitEventEngineFactory`，默认实现`RabbitEventEngineFactoryImpl`
+
+可自定义并注入`Spring`容器生效
+
+```java
+@Component
+public class CustomRabbitEventEngineFactory implements RabbitEventEngineFactory {
+    
+    @Override
+    public RabbitEventEngine create(RabbitEventProperties config) {
+        //自定义
+        return null;
+    }
+}
+```
 
 ### 事件引擎自定义配置
 
 抽象为`EventEngineConfigurer`
 
-`Kakfa`使用`KafkaEventEngineConfigurer`扩展配置，可自定义并注入`Spring`容器生效
+`Kakfa`使用`KafkaEventEngineConfigurer`扩展配置
 
-`RabbitMQ`使用`RabbitEventEngineConfigurer`扩展配置，可自定义并注入`Spring`容器生效
+可自定义并注入`Spring`容器生效
+
+```java
+@Configuration
+public class CustomKafkaEventEngineConfigurer implements KafkaEventEngineConfigurer {
+
+    @Override
+    public void configure(KafkaEventEngine engine) {
+        //自定义配置
+    }
+}
+```
+
+`RabbitMQ`使用`RabbitEventEngineConfigurer`扩展配置
+
+可自定义并注入`Spring`容器生效
+
+```java
+@Configuration
+public class CustomRabbitEventEngineConfigurer implements RabbitEventEngineConfigurer {
+    
+    @Override
+    public void configure(RabbitEventEngine engine) {
+        //自定义配置
+    }
+}
+```
 
 # 事件端点
 
@@ -235,17 +289,71 @@ RabbitEventEngine.get(EventConcept);
 
 抽象为`EventEndpointFactory`
 
-`Kakfa`事件引擎工厂`KafkaEventEndpointFactory`，默认实现`KafkaEventEndpointFactoryImpl`，可自定义并注入`Spring`容器生效
+`Kakfa`事件引擎工厂`KafkaEventEndpointFactory`，默认实现`KafkaEventEndpointFactoryImpl`
 
-`RabbitMQ`事件引擎工厂`RabbitEventEndpointFactory`，默认实现`RabbitEventEndpointFactoryImpl`，可自定义并注入`Spring`容器生效
+可自定义并注入`Spring`容器生效
+
+```java
+@Component
+public class CustomKafkaEventEndpointFactory implements KafkaEventEndpointFactory {
+    
+    @Override
+    public KafkaEventEndpoint create(String name, KafkaEventProperties.ExtendedKafkaProperties config, KafkaEventEngine engine) {
+        //自定义
+        return null;
+    }
+}
+```
+
+`RabbitMQ`事件引擎工厂`RabbitEventEndpointFactory`，默认实现`RabbitEventEndpointFactoryImpl`
+
+可自定义并注入`Spring`容器生效
+
+```java
+@Component
+public class CustomRabbitEventEndpointFactory implements RabbitEventEndpointFactory {
+    
+    @Override
+    public RabbitEventEndpoint create(String name, RabbitEventProperties.ExtendedRabbitProperties config, RabbitEventEngine engine) {
+        //自定义
+        return null;
+    }
+}
+```
 
 ### 事件端点自定义配置
 
 抽象为`EventEndpointConfigurer`
 
-`Kakfa`使用`KafkaEventEndpointConfigurer`扩展配置，可自定义并注入`Spring`容器生效
+`Kakfa`使用`KafkaEventEndpointConfigurer`扩展配置
 
-`RabbitMQ`使用`RabbitEventEndpointConfigurer`扩展配置，可自定义并注入`Spring`容器生效
+可自定义并注入`Spring`容器生效
+
+```java
+@Configuration
+public class CustomKafkaEventEndpointConfigurer implements KafkaEventEndpointConfigurer {
+
+    @Override
+    public void configure(KafkaEventEndpoint endpoint) {
+        //自定义配置
+    }
+}
+```
+
+`RabbitMQ`使用`RabbitEventEndpointConfigurer`扩展配置
+
+可自定义并注入`Spring`容器生效
+
+```java
+@Configuration
+public class CustomRabbitEventEndpointConfigurer implements RabbitEventEndpointConfigurer {
+    
+    @Override
+    public void configure(RabbitEventEndpoint endpoint) {
+        //自定义配置
+    }
+}
+```
 
 # 事件上下文
 
@@ -257,13 +365,41 @@ RabbitEventEngine.get(EventConcept);
 
 ### 事件上下文工厂
 
-抽象为`EventContextFactory`，默认实现`MapEventContextFactory`，可自定义并注入`Spring`容器生效
+抽象为`EventContextFactory`，默认实现`MapEventContextFactory`
+
+可自定义并注入`Spring`容器生效
+
+```java
+@Component
+public class CustomEventContextFactory implements EventContextFactory {
+    
+    @Override
+    public EventContext create() {
+        //自定义
+        return null;
+    }
+}
+```
 
 # 事件交换机
 
 抽象为`EventExchange`
 
-用于在发布事件或订阅事件时指定对应的事件端点，可自定义并注入`Spring`容器全局生效
+用于在发布事件或订阅事件时指定对应的事件端点
+
+可自定义并注入`Spring`容器全局生效
+
+```java
+@Component
+public class CustomEventExchange implements EventExchange {
+    
+    @Override
+    public Collection<? extends EventEndpoint> exchange(Collection<? extends EventEngine> engines, EventContext context) {
+        //自定义筛选
+        return null;
+    }
+}
+```
 
 手动指定优先级高于全局配置
 
@@ -289,6 +425,30 @@ RabbitEventEngine.get(EventConcept);
 
 可通过 [事件引擎自定义配置](#事件引擎自定义配置)/[事件端点自定义配置](#事件端点自定义配置) 的方式配置
 
+```java
+@Configuration
+public class CustomKafkaEventEngineConfigurer implements KafkaEventEngineConfigurer {
+
+    @Override
+    public void configure(KafkaEventEngine engine) {
+        engine.setPublisher(new CustomKafkaEventPublisher());
+    }
+}
+```
+
+或者
+
+```java
+@Configuration
+public class CustomKafkaEventEndpointConfigurer implements KafkaEventEndpointConfigurer {
+
+    @Override
+    public void configure(KafkaEventEndpoint endpoint) {
+        endpoint.setPublisher(new CustomKafkaEventPublisher());
+    }
+}
+```
+
 手动指定的优先级高于事件端点中的配置
 
 事件端点中的配置优先级高于事件引擎中的配置
@@ -308,6 +468,24 @@ RabbitEventEngine.get(EventConcept);
 ### RabbitMQ初始化
 
 `AbstractRabbitEventPublisher`提供`#binding`方法在发布时创建`Exchange/Queue/Binding`，用法同`BindingBuilder`
+
+```java
+public class CustomRabbitEventPublisher extends AbstractRabbitEventPublisher {
+
+    @Override
+    public void send(Object event, RabbitEventEndpoint endpoint, EventContext context) {
+        endpoint.getTemplate().convertAndSend(endpoint);
+    }
+
+    @Override
+    public void binding(RabbitBinding binding) {
+        //创建和绑定
+        binding.bind(new Queue("queue"))
+                .to(new TopicExchange("topic"))
+                .with("routingKey");
+    }
+}
+```
 
 # 事件订阅器
 
@@ -405,9 +583,15 @@ RabbitEventEngine.get(EventConcept);
 
 # 事件模版
 
+
+
 # 配置继承处理器
 
+
+
 # 生命周期监听器
+
+
 
 # 版本
 
