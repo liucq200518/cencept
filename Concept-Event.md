@@ -11,14 +11,14 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-event-spring-boot-starter:1.0.0'
+implementation 'com.github.linyuzai:concept-event-spring-boot-starter:1.1.0'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-event-spring-boot-starter</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
@@ -68,7 +68,6 @@ concept:
             acks: 1
           consumer:
             enable-auto-commit: false
-            auto-offset-reset: earliest
           template:
             default-topic: sample
           listener:
@@ -129,7 +128,7 @@ public class EventController {
 }
 ```
 
-需要注意该方式需要配置一些默认的组件
+需要注意该方式需要配置一些组件 
 
 ### 自定义方式
 
@@ -199,3 +198,45 @@ public class EventSubscriberRegister implements ApplicationRunner {
 ```
 
 ##### 示例
+
+# 事件引擎
+
+### 事件引擎工厂
+
+### 事件引擎自定义配置
+
+# 事件端点
+
+### 事件端点工厂
+
+### 事件端点自定义配置
+
+# 事件上下文
+
+# 事件交换机
+
+# 事件发布器
+
+# 事件订阅器
+
+# 事件编码器
+
+# 事件解码器
+
+# 事件监听器
+
+# 异常处理器
+
+# 事件模版
+
+# 配置继承处理器
+
+# 生命周期监听器
+
+# 版本
+
+### 列表
+
+##### 1.1.0
+
+- 代码结构优化
