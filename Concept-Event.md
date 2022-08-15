@@ -497,6 +497,30 @@ public class CustomRabbitEventPublisher extends AbstractRabbitEventPublisher {
 
 可通过 [事件引擎自定义配置](#事件引擎自定义配置)/[事件端点自定义配置](#事件端点自定义配置) 的方式配置
 
+```java
+@Configuration
+public class CustomKafkaEventEngineConfigurer implements KafkaEventEngineConfigurer {
+
+    @Override
+    public void configure(KafkaEventEngine engine) {
+        engine.setSubscriber(new CustomKafkaEventSubscriber());
+    }
+}
+```
+
+或者
+
+```java
+@Configuration
+public class CustomKafkaEventEndpointConfigurer implements KafkaEventEndpointConfigurer {
+
+    @Override
+    public void configure(KafkaEventEndpoint endpoint) {
+        endpoint.setSubscriber(new CustomKafkaEventSubscriber());
+    }
+}
+```
+
 手动指定的优先级高于事件端点中的配置
 
 事件端点中的配置优先级高于事件引擎中的配置
@@ -525,13 +549,68 @@ public class CustomRabbitEventPublisher extends AbstractRabbitEventPublisher {
 
 `AbstractRabbitEventSubscriber`提供`#binding`方法在订阅时创建`Exchange/Queue/Binding`，用法同`BindingBuilder`
 
+```java
+public class CustomRabbitEventSubscriber extends AbstractRabbitEventSubscriber {
+    
+    @Override
+    public MessageListenerContainer createMessageListenerContainer(RabbitEventEndpoint endpoint, EventContext context, MessageListener messageListener) {
+        return endpoint.getListenerContainerFactory().createListenerContainer();
+    }
+
+    @Override
+    public void binding(RabbitBinding binding) {
+        //创建和绑定
+        binding.bind(new Queue("queue"))
+                .to(new TopicExchange("topic"))
+                .with("routingKey");
+    }
+}
+```
+
 # 事件编码器
 
 抽象为`EventEncoder`
 
-用于在事件发布时对事件进行编码，默认为`null`，不进行编码处理，可自定义并注入`Spring`容器全局生效
+用于在事件发布时对事件进行编码，默认为`null`，不进行编码处理
+
+可自定义并注入`Spring`容器全局生效
+
+```java
+@Configuration
+public class EventConfig {
+
+    @Bean
+    public EventEncoder eventEncoder() {
+        return new JacksonEventEncoder();
+    }
+}
+```
 
 也可通过 [事件引擎自定义配置](#事件引擎自定义配置)/[事件端点自定义配置](#事件端点自定义配置) 的方式配置
+
+```java
+@Configuration
+public class CustomKafkaEventEngineConfigurer implements KafkaEventEngineConfigurer {
+
+    @Override
+    public void configure(KafkaEventEngine engine) {
+        engine.setEncoder(new JacksonEventEncoder());
+    }
+}
+```
+
+或者
+
+```java
+@Configuration
+public class CustomKafkaEventEndpointConfigurer implements KafkaEventEndpointConfigurer {
+
+    @Override
+    public void configure(KafkaEventEndpoint endpoint) {
+        endpoint.setEncoder(new JacksonEventEncoder());
+    }
+}
+```
 
 手动指定的优先级高于事件端点中的配置
 
@@ -550,9 +629,46 @@ public class CustomRabbitEventPublisher extends AbstractRabbitEventPublisher {
 
 抽象为`EventDecoder`
 
-用于在监听到事件时对事件进行解码，默认为`null`，不进行解码处理，可自定义并注入`Spring`容器全局生效
+用于在监听到事件时对事件进行解码，默认为`null`，不进行解码处理
+
+可自定义并注入`Spring`容器全局生效
+
+```java
+@Configuration
+public class EventConfig {
+
+    @Bean
+    public EventDecoder eventDecoder() {
+        return new JacksonEventDecoder();
+    }
+}
+```
 
 也可通过 [事件引擎自定义配置](#事件引擎自定义配置)/[事件端点自定义配置](#事件端点自定义配置) 的方式配置
+
+```java
+@Configuration
+public class CustomKafkaEventEngineConfigurer implements KafkaEventEngineConfigurer {
+
+    @Override
+    public void configure(KafkaEventEngine engine) {
+        engine.setDecoder(new JacksonEventDecoder());
+    }
+}
+```
+
+或者
+
+```java
+@Configuration
+public class CustomKafkaEventEndpointConfigurer implements KafkaEventEndpointConfigurer {
+
+    @Override
+    public void configure(KafkaEventEndpoint endpoint) {
+        endpoint.setDecoder(new JacksonEventDecoder());
+    }
+}
+```
 
 手动指定的优先级高于事件端点中的配置
 
@@ -577,21 +693,168 @@ public class CustomRabbitEventPublisher extends AbstractRabbitEventPublisher {
 
 提供`GenericEventListener<T>`自动提取泛型作为`#getType()`返回值
 
+```java
+@Configuration
+public class KafkaEventSubscriberRegister implements ApplicationRunner {
+
+    @Autowired
+    public EventConcept concept;
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        concept.template().subscribe(new GenericEventListener<KafkaData>() {
+
+            @Override
+            public void onGenericEvent(KafkaData event, EventEndpoint endpoint, EventContext context) {
+                System.out.println(event);
+            }
+        });
+    }
+}
+```
+
 # 异常处理器
 
+抽象为`EventErrorHandler`
 
+用于发布或订阅时的异常处理，默认实现`LoggerEventErrorHandler`
+
+可自定义并注入`Spring`容器全局生效
+
+```java
+@Component
+public class CustomEventErrorHandler implements EventErrorHandler {
+
+    @Override
+    public void onError(Throwable e, EventEndpoint endpoint, EventContext context) {
+        //自定义异常处理
+    }
+}
+```
+
+也可通过 [事件引擎自定义配置](#事件引擎自定义配置)/[事件端点自定义配置](#事件端点自定义配置) 的方式配置
+
+```java
+@Configuration
+public class CustomKafkaEventEngineConfigurer implements KafkaEventEngineConfigurer {
+
+    @Override
+    public void configure(KafkaEventEngine engine) {
+        engine.setErrorHandler(new CustomEventErrorHandler());
+    }
+}
+```
+
+或者
+
+```java
+@Configuration
+public class CustomKafkaEventEndpointConfigurer implements KafkaEventEndpointConfigurer {
+
+    @Override
+    public void configure(KafkaEventEndpoint endpoint) {
+        endpoint.setErrorHandler(new CustomEventErrorHandler());
+    }
+}
+```
+
+手动指定的优先级高于事件端点中的配置
+
+事件端点中的配置优先级高于事件引擎中的配置
+
+事件引擎中的配置优先级高于全局配置
 
 # 事件模版
 
+抽象为`EventTemplate`
 
+用于不同场景的配置复用
+
+可以持有事件模版直接进行发布事件
+
+```java
+@RestController
+public class Business1Controller {
+
+    private final EventTemplate template;
+
+    @Autowired
+    public Business1Controller(EventConcept concept) {
+        this.template = concept.template()
+                .exchange(new Business1EventExchange())
+                .publisher(new Business1EventPublisher());
+    }
+
+    @PostMapping("/business1")
+    public void business1() {
+        template.publish(new Business1Event());
+    }
+}
+```
 
 # 配置继承处理器
 
+抽象为`ConfigInheritHandler`
 
+`Kafka`配置继承处理器`KafkaConfigInheritHandler`，默认实现`ReflectionKafkaConfigInheritHandler`
+
+可自定义并注入`Spring`容器生效
+
+```java
+@Component
+public class CustomKafkaConfigInheritHandler implements KafkaConfigInheritHandler {
+    
+    @Override
+    public void inherit(KafkaEventProperties config) {
+        
+    }
+}
+```
+
+`RabbitMQ`配置继承处理器`RabbitConfigInheritHandler`，默认实现`ReflectionRabbitConfigInheritHandler`
+
+可自定义并注入`Spring`容器生效
+
+```java
+@Component
+public class CustomRabbitConfigInheritHandler implements RabbitConfigInheritHandler {
+    
+    @Override
+    public void inherit(RabbitEventProperties config) {
+        
+    }
+}
+```
 
 # 生命周期监听器
 
+通过实现`EventConceptLifecycleListener`接口可以在`EventConcept`初始化和销毁时扩展额外的逻辑
 
+```java
+@Component
+public class CustomEventConceptLifecycleListener implements EventConceptLifecycleListener {
+    
+    @Override
+    public void onInitialize(EventConcept concept) {
+        //初始化
+    }
+
+    @Override
+    public void onDestroy(EventConcept concept) {
+        //销毁
+    }
+}
+```
+
+# 原生支持
+
+### KafkaTemplate
+
+### KafkaListener
+
+### RabbitTemplate
+
+### RabbitListener
 
 # 版本
 
