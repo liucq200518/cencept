@@ -944,6 +944,7 @@ public class KafkaEventSubscriberRegister {
 
 ![event-publish](https://user-images.githubusercontent.com/18523183/184793482-d5f5a6d4-77fd-4882-9e17-a8d84c5dfd7f.svg)
 
+![event-subscribe](https://user-images.githubusercontent.com/18523183/184804217-4b336881-a0f2-495a-bfa1-a7df389bf615.svg)
 
 # 版本
 
