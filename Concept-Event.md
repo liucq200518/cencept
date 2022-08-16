@@ -8,8 +8,6 @@
 
 支持可视化动态添加（未实现，考虑后续版本实现）
 
-![event-config](https://user-images.githubusercontent.com/18523183/184789920-f86cfef8-3a2c-4ce6-8a14-c6c289b8cbb6.svg)
-
 # 集成
 
 ```gradle
@@ -939,6 +937,13 @@ public class KafkaEventSubscriberRegister {
 |`RabbitTemplate`|`${事件端点名称}RabbitTemplate`|
 |`RabbitAdmin`|`${事件端点名称}RabbitAdmin`|
 |`RabbitEventEndpoint`|`${事件端点名称}RabbitEventEndpoint`|
+
+# 流程图
+
+![event-config](https://user-images.githubusercontent.com/18523183/184789920-f86cfef8-3a2c-4ce6-8a14-c6c289b8cbb6.svg)
+
+![event-publish](https://user-images.githubusercontent.com/18523183/184793482-d5f5a6d4-77fd-4882-9e17-a8d84c5dfd7f.svg)
+
 
 # 版本
 
