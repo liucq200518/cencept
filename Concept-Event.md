@@ -8,6 +8,8 @@
 
 支持可视化动态添加（未实现，考虑后续版本实现）
 
+![event-config](https://user-images.githubusercontent.com/18523183/184789920-f86cfef8-3a2c-4ce6-8a14-c6c289b8cbb6.svg)
+
 # 集成
 
 ```gradle
