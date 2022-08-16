@@ -11,7 +11,7 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-event-spring-boot-starter:1.1.0'
+implementation 'com.github.linyuzai:concept-event-spring-boot-starter:1.1.1'
 ```
 
 或者
@@ -20,7 +20,7 @@ implementation 'com.github.linyuzai:concept-event-spring-boot-starter:1.1.0'
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-event-spring-boot-starter</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
 </dependency>
 ```
 
@@ -919,12 +919,12 @@ public class KafkaEventSubscriberRegister {
 
 |Bean|Name|
 |-|-|
-|`ProducerFactory<Object, Object>`|`${事件端点名称}KafkaProducerFactory`|
-|`ProducerListener<Object, Object>`|`${事件端点名称}KafkaProducerListener`|
-|`KafkaTemplate<Object, Object>`|`${事件端点名称}KafkaTemplate`|
-|`ConsumerFactory<Object, Object>`|`${事件端点名称}KafkaConsumerFactory`|
-|`KafkaTransactionManager<Object, Object>`|`${事件端点名称}KafkaTransactionManager`|
-|`KafkaListenerContainerFactory<? extends MessageListenerContainer>`|`${事件端点名称}KafkaListenerContainerFactory`|
+|`ProducerFactory`|`${事件端点名称}KafkaProducerFactory`|
+|`ProducerListener`|`${事件端点名称}KafkaProducerListener`|
+|`KafkaTemplate`|`${事件端点名称}KafkaTemplate`|
+|`ConsumerFactory`|`${事件端点名称}KafkaConsumerFactory`|
+|`KafkaTransactionManager`|`${事件端点名称}KafkaTransactionManager`|
+|`KafkaListenerContainerFactory`|`${事件端点名称}KafkaListenerContainerFactory`|
 |`KafkaAdmin`|`${事件端点名称}KafkaAdmin`|
 |`KafkaEventEndpoint`|`${事件端点名称}KafkaEventEndpoint`|
 
@@ -933,7 +933,7 @@ public class KafkaEventSubscriberRegister {
 |Bean|Name|
 |-|-|
 |`ConnectionFactory`|`${事件端点名称}RabbitConnectionFactory`|
-|`RabbitListenerContainerFactory<? extends MessageListenerContainer>`|`${事件端点名称}RabbitListenerContainerFactory`|
+|`RabbitListenerContainerFactory`|`${事件端点名称}RabbitListenerContainerFactory`|
 |`RabbitTemplate`|`${事件端点名称}RabbitTemplate`|
 |`RabbitAdmin`|`${事件端点名称}RabbitAdmin`|
 |`RabbitEventEndpoint`|`${事件端点名称}RabbitEventEndpoint`|
@@ -945,3 +945,8 @@ public class KafkaEventSubscriberRegister {
 ##### 1.1.0
 
 - 代码结构优化
+
+##### 1.1.1
+
+- `InheritHandler`改为`ConfigInheritHandler`
+- 漏注册`RabbitEventEndpoint`的问题
