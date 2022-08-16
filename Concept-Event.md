@@ -6,13 +6,15 @@
 
 同时以简单的事件模型作为抽象，支持不对任何中间件强绑定的场景
 
-支持动态添加（未实现）
+支持可视化动态添加（未实现，考虑后续版本实现）
 
 # 集成
 
 ```gradle
 implementation 'com.github.linyuzai:concept-event-spring-boot-starter:1.1.0'
 ```
+
+或者
 
 ```xml
 <dependency>
@@ -407,13 +409,13 @@ public class CustomEventExchange implements EventExchange {
 
 |事件交换机|说明|
 |-|-|
-|EngineExchange|指定一个或多个引擎下的所有端点|
-|EndpointExchange|指定一个引擎下的一个或多个端点|
-|KafkaEngineExchange|指定Kafka所有端点|
-|KafkaEndpointExchange|指定Kafka一个或多个端点|
-|RabbitEngineExchange|指定RabbitMQ所有端点|
-|RabbitEndpointExchange|指定RabbitMQ一个或多个端点|
-|ComposeEventExchange|组合多个事件交换机|
+|`EngineExchange`|指定一个或多个引擎下的所有端点|
+|`EndpointExchange`|指定一个引擎下的一个或多个端点|
+|`KafkaEngineExchange`|指定`Kafka`所有端点|
+|`KafkaEndpointExchange`|指定`Kafka`一个或多个端点|
+|`RabbitEngineExchange`|指定`RabbitMQ`所有端点|
+|`RabbitEndpointExchange`|指定`RabbitMQ`一个或多个端点|
+|`ComposeEventExchange`|组合多个事件交换机|
 
 # 事件发布器
 
@@ -457,13 +459,13 @@ public class CustomKafkaEventEndpointConfigurer implements KafkaEventEndpointCon
 
 |事件发布器|说明|
 |-|-|
-|TopicKafkaEventPublisher|指定Topic的事件发布器|
-|ConfigurableKafkaEventPublisher|可配置Topic，Partition，Timestamp，Key的事件发布器|
-|DefaultKafkaEventPublisher|基于`KafkaTemplate#sendDefault`的事件发布器|
-|RoutingRabbitEventPublisher|指定exchange和routingKey的事件发布器|
-|ConfigurableRabbitEventPublisher|可配置exchange，routingKey和correlationData的事件发布器|
-|DefaultRabbitEventPublisher|基于`RabbitTemplate#convertAndSend`的事件发布器|
-|ComposeEventPublisher|组合多个事件发布器|
+|`TopicKafkaEventPublisher`|指定`Topic`的事件发布器|
+|`ConfigurableKafkaEventPublisher`|可配置`Topic`，`Partition`，`Timestamp`，`Key`的事件发布器|
+|`DefaultKafkaEventPublisher`|基于`KafkaTemplate#sendDefault`的事件发布器|
+|`RoutingRabbitEventPublisher`|指定`exchange`和`routingKey`的事件发布器|
+|`ConfigurableRabbitEventPublisher`|可配置`exchange`，`routingKey`和`correlationData`的事件发布器|
+|`DefaultRabbitEventPublisher`|基于`RabbitTemplate#convertAndSend`的事件发布器|
+|`ComposeEventPublisher`|组合多个事件发布器|
 
 ### RabbitMQ初始化
 
@@ -529,13 +531,13 @@ public class CustomKafkaEventEndpointConfigurer implements KafkaEventEndpointCon
 
 |事件订阅器|说明|
 |-|-|
-|TopicKafkaEventSubscriber|指定Topic的事件订阅器|
-|TopicPatternKafkaEventSubscriber|指定Topic Pattern的事件订阅器|
-|TopicPartitionOffsetKafkaEventSubscriber|指定TopicPartitionOffset的事件订阅器|
-|DefaultKafkaEventSubscriber|基于KafkaListenerEndpoint的事件订阅器|
-|QueueRabbitEventSubscriber|指定Queue的事件订阅器|
-|DefaultRabbitEventSubscriber|基于RabbitListenerEndpoint的事件订阅器|
-|ComposeEventSubscriber|组合多个事件订阅器|
+|`TopicKafkaEventSubscriber`|指定`Topic`的事件订阅器|
+|`TopicPatternKafkaEventSubscriber`|指定`Topic Pattern`的事件订阅器|
+|`TopicPartitionOffsetKafkaEventSubscriber`|指定`TopicPartitionOffset`的事件订阅器|
+|`DefaultKafkaEventSubscriber`|基于`KafkaListenerEndpoint`的事件订阅器|
+|`QueueRabbitEventSubscriber`|指定`Queue`的事件订阅器|
+|`DefaultRabbitEventSubscriber`|基于`RabbitListenerEndpoint`的事件订阅器|
+|`ComposeEventSubscriber`|组合多个事件订阅器|
 
 ### 订阅句柄
 
@@ -622,8 +624,8 @@ public class CustomKafkaEventEndpointConfigurer implements KafkaEventEndpointCon
 
 |事件编码器|说明|
 |-|-|
-|JacksonEventEncoder|基于Jackson的json编码|
-|SerializationEventDecoder|基于jdk序列化的编码|
+|`JacksonEventEncoder`|基于`Jackson`的`json`编码|
+|`SerializationEventDecoder`|基于`jdk`序列化的编码|
 
 # 事件解码器
 
@@ -680,8 +682,8 @@ public class CustomKafkaEventEndpointConfigurer implements KafkaEventEndpointCon
 
 |事件解码器|说明|
 |-|-|
-|JacksonEventDecoder|基于Jackson的json解码|
-|SerializationEventDecoder|基于jdk序列化的解码|
+|`JacksonEventDecoder`|基于`Jackson`的`json`解码|
+|`SerializationEventDecoder`|基于`jdk`序列化的解码|
 
 # 事件监听器
 
@@ -850,11 +852,91 @@ public class CustomEventConceptLifecycleListener implements EventConceptLifecycl
 
 ### KafkaTemplate
 
+可通过指定`@Qualifier`获取，名称为：`${事件端点名称}KafkaTemplate`
+
+```java
+@RequestMapping("/concept-event/kafka")
+public class KafkaEventController {
+
+    @Autowired
+    @Qualifier("devKafkaTemplate")
+    private KafkaTemplate<Object, Object> kafkaTemplate;
+}
+```
+
 ### KafkaListener
+
+可通过指定`containerFactory`使用，名称为：`${事件端点名称}KafkaListenerContainerFactory`
+
+```java
+@Configuration
+public class KafkaEventSubscriberRegister {
+
+    @KafkaListener(topics = "sample", containerFactory = "devKafkaListenerContainerFactory")
+    public void receiveLocal(String msg, Acknowledgment acknowledgment) {
+        System.out.println("dev-" + msg);
+        acknowledgment.acknowledge();
+    }
+}
+```
 
 ### RabbitTemplate
 
+可通过指定`@Qualifier`获取，名称为：`${事件端点名称}KafkaTemplate`
+
+```java
+@RequestMapping("/concept-event/rabbit")
+public class RabbitEventController {
+
+    @Autowired
+    @Qualifier("devRabbitTemplate")
+    private RabbitTemplate rabbitTemplate;
+}
+```
+
 ### RabbitListener
+
+可通过指定`containerFactory`使用，名称为：`${事件端点名称}RabbitListenerContainerFactory`
+
+```java
+@Configuration
+public class KafkaEventSubscriberRegister {
+
+    @SneakyThrows
+    @RabbitListener(queues = "queue", containerFactory = "devRabbitListenerContainerFactory")
+    public void receiveDev(Message message, Channel channel) {
+        System.out.println("dev-" + new String(message.getBody()));
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+    }
+}
+```
+
+# Bean名称
+
+下列`Bean`全部使用`ConfigurableBeanFactory#registerSingleton`注册
+
+- Kafka
+
+|Bean|Name|
+|-|-|
+|`ProducerFactory<Object, Object>`|`${事件端点名称}KafkaProducerFactory`|
+|`ProducerListener<Object, Object>`|`${事件端点名称}KafkaProducerListener`|
+|`KafkaTemplate<Object, Object>`|`${事件端点名称}KafkaTemplate`|
+|`ConsumerFactory<Object, Object>`|`${事件端点名称}KafkaConsumerFactory`|
+|`KafkaTransactionManager<Object, Object>`|`${事件端点名称}KafkaTransactionManager`|
+|`KafkaListenerContainerFactory<? extends MessageListenerContainer>`|`${事件端点名称}KafkaListenerContainerFactory`|
+|`KafkaAdmin`|`${事件端点名称}KafkaAdmin`|
+|`KafkaEventEndpoint`|`${事件端点名称}KafkaEventEndpoint`|
+
+- RabbitMQ
+
+|Bean|Name|
+|-|-|
+|`ConnectionFactory`|`${事件端点名称}RabbitConnectionFactory`|
+|`RabbitListenerContainerFactory<? extends MessageListenerContainer>`|`${事件端点名称}RabbitListenerContainerFactory`|
+|`RabbitTemplate`|`${事件端点名称}RabbitTemplate`|
+|`RabbitAdmin`|`${事件端点名称}RabbitAdmin`|
+|`RabbitEventEndpoint`|`${事件端点名称}RabbitEventEndpoint`|
 
 # 版本
 
