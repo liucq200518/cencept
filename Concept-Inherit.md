@@ -80,3 +80,4 @@ annotationProcessor 'com.github.linyuzai:concept-inherit-processor:1.0.0'
 
 请尽量避免相同签名的字段或方法，目前还未完善异常提示
 
+如果遇到编译报错，可以尝试把依赖放到`Lombok`前面
