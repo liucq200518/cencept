@@ -7,8 +7,8 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-inherit-processor:1.0.0'
-annotationProcessor 'com.github.linyuzai:concept-inherit-processor:1.0.0'
+implementation 'com.github.linyuzai:concept-inherit-processor:1.2.0'
+annotationProcessor 'com.github.linyuzai:concept-inherit-processor:1.2.0'
 ```
 
 或者
@@ -17,7 +17,7 @@ annotationProcessor 'com.github.linyuzai:concept-inherit-processor:1.0.0'
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-inherit-processor</artifactId>
-  <version>1.0.0</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
@@ -82,10 +82,13 @@ annotationProcessor 'com.github.linyuzai:concept-inherit-processor:1.0.0'
 
 如果遇到编译报错，可以尝试把依赖放到`Lombok`前面
 
+JDK11在`import`了其他类的情况下还存在问题
+
 # 版本
 
 ### 列表
 
-##### 1.1.0
+##### 1.2.0
 
-- 修复`import`未导入的的编译错误
+- 修复`import`未导入导致编译失败的问题（JDK8修复）
+- 修复方法带有`@Override`注解时编译失败的问题
