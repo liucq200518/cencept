@@ -9,7 +9,7 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-cloud-web:1.3.0'
+implementation 'com.github.linyuzai:concept-cloud-web:1.4.0'
 ```
 
 或者
@@ -18,7 +18,7 @@ implementation 'com.github.linyuzai:concept-cloud-web:1.3.0'
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-cloud-web</artifactId>
-  <version>1.3.0</version>
+  <version>1.4.0</version>
 </dependency>
 ```
 
@@ -31,7 +31,7 @@ implementation 'com.github.linyuzai:concept-cloud-web:1.3.0'
 public class Intercepts {
 
     @OnRequest
-    public void request(HttpServletRequest request) {
+    public void request(Request request) {
         //拦截请求
     }
 
@@ -65,8 +65,8 @@ public class Intercepts {
 
     @BreakIntercept
     @OnRequest
-    public boolean nonToken(HttpServletRequest request) {
-        return request.getRequestURI().equals("/login");
+    public boolean nonToken(Request request) {
+        return request.getPath().equals("/login");
     }
 }
 ```
