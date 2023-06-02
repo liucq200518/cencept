@@ -9,7 +9,7 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-cloud-web:1.4.0'
+implementation 'com.github.linyuzai:concept-cloud-web:1.5.3'
 ```
 
 或者
@@ -18,7 +18,7 @@ implementation 'com.github.linyuzai:concept-cloud-web:1.4.0'
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-cloud-web</artifactId>
-  <version>1.4.0</version>
+  <version>1.5.3</version>
 </dependency>
 ```
 
