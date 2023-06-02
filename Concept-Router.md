@@ -67,10 +67,10 @@ concept:
 
 # 版本
 
-- **1.1.0**
+### 1.1.0
 
-优化 BeanPostProcessor 警告
+- 优化 BeanPostProcessor 警告
 
-兼容单体应用
+- 兼容单体应用
 
-使用 webjars 代替 js 和 css
+- 使用 webjars 代替 js 和 css
