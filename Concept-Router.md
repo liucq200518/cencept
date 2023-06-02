@@ -9,14 +9,14 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-router-spring-boot-starter:1.0.0'
+implementation 'com.github.linyuzai:concept-router-spring-boot-starter:1.1.0'
 ```
 
 ```xml
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-router-spring-boot-starter</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
@@ -64,3 +64,13 @@ concept:
 - Spring Boot 2.0.x (ribbon)
 
 如果集成之后出现报错或不生效请联系我并提供`Spring Boot`和`Spring Cloud`版本以及是否指定了负载均衡组件
+
+# 版本
+
+- **1.1.0**
+
+优化 BeanPostProcessor 警告
+
+兼容单体应用
+
+使用 webjars 代替 js 和 css
