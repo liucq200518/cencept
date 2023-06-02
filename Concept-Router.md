@@ -20,7 +20,7 @@ implementation 'com.github.linyuzai:concept-router-spring-boot-starter:1.1.0'
 </dependency>
 ```
 
-只需引入包无需额外的配置
+只需引入包无需额外的配置（不用配置即可使用，也可以通过配置指定一些参数）
 
 线上环境可以通过`concept.router.enabled=false`关闭功能
 
@@ -51,7 +51,7 @@ concept:
 
 `服务地址/concept-router/index.html`
 
-如果对路径做了拦截记得将`/concept-router/**`加入白名单
+如果对路径做了拦截记得将`/concept-router/**`和`/concept/router/**`加入白名单
 
 # 判断是否生效
 
