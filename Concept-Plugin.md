@@ -335,7 +335,7 @@ new ModifierFilter(Modifier::isInterface, Modifier::isAbstract).negate();
 
 # 插件格式器
 
-插件格式器`PluginFormatter`用于将插件插件转换器转换后的内容根据插件提取器中定义的类型来格式化
+插件格式器`PluginFormatter`用于将插件转换器转换后的内容根据插件提取器中定义的类型来格式化
 
 如将我们解析之后的`Map<String, Class<?>>`格式化为`List<Class<?>>`
 
@@ -412,7 +412,7 @@ public class ConceptPluginSample {
 
 但是需要注意，要在`A.jar`中的插件触发`B.jar`中类的类加载之前加载`B.jar`
 
-简单来说就是先加载`B.jar`在加载`A.jar`
+简单来说就是先加载`B.jar`再加载`A.jar`
 
 或是等所有的`jar`都加载完成后，再调用插件中的方法
 
