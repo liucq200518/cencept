@@ -22,15 +22,17 @@
 
 # 使用
 
-需要访问`Github`下载`Gradle`，注意先配置好网络
+需要访问`Github`和下载`Gradle`，注意先配置好网络
 
-1. 搜索`Concept Cloud`
+1. 搜索`Concept Cloud`安装即可，最低版本2021.3，最高版本2023.1
 
 2. 新建项目
 
 File -> New -> Project -> Concept Cloud
 
 ![plugin-project-create1](https://github.com/Linyuzai/concept/assets/18523183/9b7540ae-7773-4f8e-9811-7675f141dab9)
+
+如果连接不上`Github`可以尝试`CDN`:`https://cdn.jsdelivr.net/gh/Linyuzai/concept/concept-cloud/pluginew`
 
 ![plugin-project-create2](https://github.com/Linyuzai/concept/assets/18523183/2f46d4cb-802e-4374-bfda-562990162509)
 
@@ -67,5 +69,3 @@ File -> New -> Project -> Concept Cloud
 专栏中对于一些功能思路有讲解，还有一些示例
 
 https://juejin.cn/column/7140131104270319629
-
-# 
