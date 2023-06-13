@@ -22,6 +22,8 @@
 
 # 使用
 
+### 创建项目
+
 需要访问`Github`和下载`Gradle`，注意先配置好网络
 
 1. 搜索`Concept Cloud`安装即可，最低版本2021.3，最高版本2023.1
@@ -36,7 +38,7 @@ File -> New -> Project -> Concept Cloud
 
 ![plugin-project-create2](https://github.com/Linyuzai/concept/assets/18523183/2f46d4cb-802e-4374-bfda-562990162509)
 
-3. 生成`domain`模块代码
+### 生成`domain`模块代码
 
 先在`domain`模块下新建包
 
@@ -50,7 +52,7 @@ File -> New -> Project -> Concept Cloud
 
 ![plugin-code-domain-files](https://github.com/Linyuzai/concept/assets/18523183/4db39e27-8ded-4287-9e8c-6efdcd58b60c)
 
-4. 生成`module`模块代码
+### 生成`module`模块代码
 
 先在`domain`模块下新建包
 
