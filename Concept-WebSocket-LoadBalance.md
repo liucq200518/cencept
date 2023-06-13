@@ -15,7 +15,7 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:1.1.0'
+implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:1.1.1'
 
 implementation 'org.springframework.boot:spring-boot-starter-websocket'//webmvc需要添加websocket依赖，webflux不需要
 ```
@@ -24,7 +24,7 @@ implementation 'org.springframework.boot:spring-boot-starter-websocket'//webmvc�
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-websocket-loadbalance-spring-boot-starter</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
 </dependency>
 
 <!--webmvc需要添加websocket依赖，webflux不需要-->
@@ -304,3 +304,9 @@ public class WsController {
 `Servlet`环境下会回调`WebSocketHandlerRegistration`
 
 `Reactive`环境下会回调`ReactiveWebSocketServerHandlerMapping`
+
+# 版本
+
+### 1.1.1
+
+- 支持`Undertow`
