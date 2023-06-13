@@ -66,6 +66,14 @@ File -> New -> Project -> Concept Cloud
 
 ![plugin-code-module-files](https://github.com/Linyuzai/concept/assets/18523183/f0199e70-62aa-46fa-9922-3d2d998a8ef1)
 
+# 补充说明
+
+其中`domain-sample`和`module-sample`为示例代码
+
+`sql`中的`sample.sql`导入之后（配置好数据库）可以直接启动`BootApplication`
+
+输入`localhost:8080/swagger-ui/index.html`能看到测试页面
+
 # 掘金专栏
 
 专栏中对于一些功能思路有讲解，还有一些示例
