@@ -32,15 +32,23 @@
 
 File -> New -> Project -> Concept Cloud
 
+首先就是基本信息，注意`jdk`需要`1.8`
+
 ![plugin-project-create1](https://github.com/Linyuzai/concept/assets/18523183/9b7540ae-7773-4f8e-9811-7675f141dab9)
 
 如果连接不上`Github`可以尝试`CDN`:`https://cdn.jsdelivr.net/gh/Linyuzai/concept/concept-cloud/pluginew`
 
+然后选择需要依赖的库
+
 ![plugin-project-create2](https://github.com/Linyuzai/concept/assets/18523183/2f46d4cb-802e-4374-bfda-562990162509)
+
+最后确定即可
+
+![创建项目](https://github.com/Linyuzai/concept/assets/18523183/0c65c409-d121-4f65-be9a-1c4ce6cfe67a)
 
 ### 生成`domain`模块代码
 
-先在`domain`模块下新建包
+先在`domain`模块下新建包，会根据包名自动生成类名，也可以自己修改
 
 ![plugin-code-domain-select](https://github.com/Linyuzai/concept/assets/18523183/223a173a-6325-4dec-9cde-99e69bbf0516)
 
@@ -52,9 +60,11 @@ File -> New -> Project -> Concept Cloud
 
 ![plugin-code-domain-files](https://github.com/Linyuzai/concept/assets/18523183/4db39e27-8ded-4287-9e8c-6efdcd58b60c)
 
+![生成domain代码](https://github.com/Linyuzai/concept/assets/18523183/c88669e3-ac30-4611-ad54-ae46f96d66b5)
+
 ### 生成`module`模块代码
 
-先在`domain`模块下新建包
+先在`module`模块下新建包，最好和`domain`下的包名一样，这样就能直接匹配
 
 ![plugin-code-module-select](https://github.com/Linyuzai/concept/assets/18523183/04d6a287-c67b-4f05-98ad-8b9c2dc5ca8f)
 
@@ -66,13 +76,17 @@ File -> New -> Project -> Concept Cloud
 
 ![plugin-code-module-files](https://github.com/Linyuzai/concept/assets/18523183/f0199e70-62aa-46fa-9922-3d2d998a8ef1)
 
+![生成module代码](https://github.com/Linyuzai/concept/assets/18523183/64f20d32-2b63-40e8-bfa2-d11f184c9e50)
+
 # 补充说明
 
 其中`domain-sample`和`module-sample`为示例代码
 
 `sql`中的`sample.sql`导入之后（配置好数据库）可以直接启动`BootApplication`
 
-输入`localhost:8080/swagger-ui/index.html`能看到测试页面
+输入`localhost:8080/swagger-ui/index.html`就能看到测试页面
+
+默认引入了[Concept Cloud Web](./Concept-Cloud-Web)会全局拦截请求和响应
 
 # 掘金专栏
 
