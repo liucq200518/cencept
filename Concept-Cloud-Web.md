@@ -228,3 +228,11 @@ public class CustomWebResultFactory extends AnnotationWebResultFactory {
     }
 }
 ```
+
+# 版本
+
+### 1.5.4
+
+- 修复WebContext在关闭Response拦截时不会清除的问题
+
+- WebContextManager添加Listener用于监听
