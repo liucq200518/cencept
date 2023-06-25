@@ -231,7 +231,7 @@ public class CustomWebResultFactory extends AnnotationWebResultFactory {
 
 # 补充
 
-默认会起用请求拦截，响应拦截，和i18n，可以使用配置开启或关闭
+默认会启用请求拦截，响应拦截，和i18n，可以使用配置开启或关闭
 
 ```yaml
 concept:
