@@ -15,7 +15,7 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:1.1.1'
+implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:1.1.2'
 
 implementation 'org.springframework.boot:spring-boot-starter-websocket'//webmvc需要添加websocket依赖，webflux不需要
 ```
@@ -24,7 +24,7 @@ implementation 'org.springframework.boot:spring-boot-starter-websocket'//webmvc�
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-websocket-loadbalance-spring-boot-starter</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.2</version>
 </dependency>
 
 <!--webmvc需要添加websocket依赖，webflux不需要-->
@@ -310,3 +310,7 @@ public class WsController {
 ### 1.1.1
 
 - 支持`Undertow`
+
+### 1.1.2
+
+- 多线程发送消息的并发问题
