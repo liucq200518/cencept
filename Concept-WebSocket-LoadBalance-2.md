@@ -102,3 +102,56 @@ concept:
     executor:
       thread-pool-size: 1 #线程池大小，默认1
 ```
+
+# 原理
+
+通过服务间的`websocket`连接或是`Redis`和`MQ`等中间件转发消息
+
+# 连接域
+
+由于本库支持多种连接（当前包括`WebSocket`和`Netty`）同时配置，所以引入连接域来进行限制。
+
+在自定义组件时需要指定该组件所适配的连接类型（`NettyScoped.NAME/WebSocketScoped.NAME`）
+
+# 组件说明
+
+所有组件均可自定义扩展（可能需要指定`Order`来保证自定义的组件生效）
+
+### 连接仓库
+
+`ConnectionRepository`用于缓存连接实例
+
+默认使用`Map<String, Map<Object, Connection>> connections = new ConcurrentHashMap<>();`缓存在内存中
+
+通过`ConnectionRepositoryFactory`自定义并注入`Spring`容器
+
+### 连接服务管理器
+
+`ConnectionServerManager`用于获取其他服务实例信息（`ws`双向连接中使用）和自身服务信息
+
+默认使用`DiscoveryClient`和`Registration`来获得信息
+
+通过`ConnectionServerManagerFactory`自定义并注入`Spring`容器
+
+### 连接订阅器
+
+`ConnectionSubscriber`用于订阅其他服务的消息
+
+可在配置文件中配置主从订阅器
+
+- `concept.websocket.load-balance.subscriber-master`
+
+- `concept.websocket.load-balance.subscriber-slave`
+
+也可以通过`ConnectionSubscriberFactory`或`MasterSlaveConnectionSubscriberFactory`自定义并注入`Spring`容器
+
+### 连接工厂
+
+`ConnectionFactory`用于扩展`Connection`（如`WebSocketConnection/NettyConnection`）
+
+通过`ConnectionFactory`自定义并注入`Spring`容器
+
+### 连接选择器
+
+`ConnectionSelector`用于在发送消息时选择发送给哪些连接
+
