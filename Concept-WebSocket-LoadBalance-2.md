@@ -154,7 +154,7 @@ concept:
 
 - `concept.websocket.load-balance.subscriber-slave`用于配置从订阅器
 
-### 美枚举
+### 枚举
 
 |配置|说明|
 |-|-|
