@@ -32,7 +32,6 @@
 
 ```java
 @EnableWebSocketLoadBalanceConcept
-@EnableDiscoveryClient
 @SpringBootApplication
 public class WsServiceApplication {
 
@@ -112,6 +111,20 @@ concept:
 由于本库支持多种连接（当前包括`WebSocket`和`Netty`）同时配置，所以引入连接域来进行限制。
 
 在自定义组件时需要指定该组件所适配的连接类型（`NettyScoped.NAME/WebSocketScoped.NAME`）
+
+NettyEventListener/NettyLifecycleListener
+
+# 主从订阅
+
+# 幂等转发
+
+# 消息接收
+
+# 选择器链
+
+user/path
+
+# 编解码链
 
 # 组件说明
 
