@@ -24,7 +24,7 @@
 
 # 集成
 
-```grade
+```gradle
 implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:2.0.0'
 
 implementation 'org.springframework.boot:spring-boot-starter-websocket'//webmvc需要添加websocket依赖，webflux不需要
