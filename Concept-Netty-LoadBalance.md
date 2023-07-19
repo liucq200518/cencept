@@ -232,7 +232,7 @@ public class NettyController {
 
 对于`ConnectionSelector`提供扩展`FilterConnectionSelector`
 
-将会作为一个过滤器来支持多种条件，即[组合条件](#组合条件)模式
+将会作为一个过滤器来支持多种条件，即组合条件模式
 
 # 消息接收
 
