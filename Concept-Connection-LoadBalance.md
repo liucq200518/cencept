@@ -2,10 +2,10 @@
 
 ### 2.x.x
 
-- [WebSocket](./Concept WebSocket LoadBalance 2)
+- [WebSocket](./Concept-WebSocket-LoadBalance-2)
 
-- [Netty](./Concept Netty LoadBalance)
+- [Netty](./Concept-Netty-LoadBalance)
 
 ### 1.x.x
 
-- [WebSocket](./Concept WebSocket LoadBalance)
+- [WebSocket](./Concept-WebSocket-LoadBalance)
