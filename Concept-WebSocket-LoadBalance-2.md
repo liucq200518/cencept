@@ -102,8 +102,8 @@ concept:
         period: 60000 #心跳间隔，单位ms，默认1分钟
         timeout: 210000 #超时时间，单位ms，默认3.5分钟，3次心跳间隔
     load-balance: #负载均衡（转发）配置
-      subscriber-master: websocket #订阅者主通道，默认 websocket
-      subscriber-slave: none #订阅者从通道，默认无从订阅者
+      subscriber-master: websocket #主订阅器，默认 websocket
+      subscriber-slave: none #从订阅器，默认无
       message:
         retry:
           times: 0 #转发重试次数，默认不重试
@@ -124,11 +124,21 @@ concept:
 
 通过服务间的`websocket`连接或是`Redis`和`MQ`等中间件转发消息
 
+# 连接类型
+
+|类型|说明|
+|-|-|
+|Client|普通客户端|
+|Subscriber|订阅其他的服务消息的连接，该类型连接接收到的消息需要被转发|
+|Observable|其他服务监听自身消息的连接，发送消息时需要转发消息到该类型的连接|
+
 # 连接域
 
 由于本库支持多种连接（当前包括`WebSocket`和`Netty`）同时配置，所以引入连接域来进行限制。
 
 在自定义组件时需要指定该组件所适配的连接类型（`NettyScoped.NAME/WebSocketScoped.NAME`）
+
+可通过重写`boolean support(String scope)`方法或是调用`addScopes(String... scopes)`来配置
 
 ### 事件监听器
 
@@ -148,11 +158,17 @@ concept:
 
 等到`Kafka`心跳检测正常，则重新切回到`Kafka`
 
+抛出`MessageTransportException`将会触发切换
+
 ### 配置
 
-- `concept.websocket.load-balance.subscriber-master`用于配置主订阅器
-
-- `concept.websocket.load-balance.subscriber-slave`用于配置从订阅器
+```yaml
+concept:
+  websocket:
+    load-balance:
+      subscriber-master: websocket #主订阅者器，默认 websocket
+      subscriber-slave: none #从订阅器，默认无
+```
 
 ### 枚举
 
@@ -284,7 +300,11 @@ public class WsController {
 
 实现`WebSocketMessageHandler`来处理客户端发送的消息
 
-# 编解码链
+# 编解码器
+
+默认配置的编解码器都是转`JSON`
+
+可以通过`(Abstract)MessageCodecAdapter`自定义
 
 # 组件说明
 
@@ -296,7 +316,7 @@ public class WsController {
 
 默认使用`Map<String, Map<Object, Connection>> connections = new ConcurrentHashMap<>();`缓存在内存中
 
-通过`ConnectionRepositoryFactory`自定义并注入`Spring`容器
+可自定义`ConnectionRepositoryFactory`注入容器生效
 
 ### 连接服务管理器
 
@@ -304,27 +324,114 @@ public class WsController {
 
 默认使用`DiscoveryClient`和`Registration`来获得信息
 
-通过`ConnectionServerManagerFactory`自定义并注入`Spring`容器
+可自定义`ConnectionServerManagerFactory`注入容器生效
 
 ### 连接订阅器
 
 `ConnectionSubscriber`用于订阅其他服务的消息
 
-可在配置文件中配置主从订阅器
+提供配置文件配置
 
-- `concept.websocket.load-balance.subscriber-master`
-
-- `concept.websocket.load-balance.subscriber-slave`
-
-也可以通过`ConnectionSubscriberFactory`或`MasterSlaveConnectionSubscriberFactory`自定义并注入`Spring`容器
+可自定义`(Abstract)ConnectionSubscriberFactory`或`(Abstract)MasterSlaveConnectionSubscriberFactory`注入容器生效
 
 ### 连接工厂
 
 `ConnectionFactory`用于扩展`Connection`（如`WebSocketConnection/NettyConnection`）
 
-通过`ConnectionFactory`自定义并注入`Spring`容器
+可自定义`ConnectionFactory`注入容器生效
 
 ### 连接选择器
 
 `ConnectionSelector`用于在发送消息时选择发送给哪些连接
 
+可自定义`ConnectionSelector`或`FilterConnectionSelector`注入容器生效
+
+### 消息工厂
+
+`MessageFactory`用于适配创建消息
+
+可自定义`MessageFactory`注入容器生效
+
+### 消息编解码适配器
+
+`MessageCodecAdapter`用于适配各种[连接类型](#连接类型)的消息编码器和消息解码器
+
+可自定义`(Abstract)MessageCodecAdapter`注入容器生效
+
+### 消息重试策略
+
+`MessageRetryStrategyAdapter`用于适配各种[连接类型](#连接类型)的消息重试策略
+
+消息重试不对`ping`和`pong`生效
+
+可自定义`(Abstract)MessageRetryStrategyAdapter`注入容器生效
+
+### 消息幂等校验器
+
+`MessageIdempotentVerifier`用于生成消息ID以及校验消息是否处理
+
+可自定义`MessageIdempotentVerifierFactory`注入容器生效
+
+### 执行器
+
+`ScheduledExecutor`用于执行各种延时/定时任务，如心跳等
+
+可自定义`ScheduledExecutorFactory`注入容器生效
+
+### 日志
+
+`ConnectionLogger`用于打印日志
+
+默认使用`Spring`的日志库
+
+可自定义`ConnectionLoggerFactory`注入容器生效
+
+### 事件发布器
+
+`ConnectionEventPublisher`用于发布事件
+
+默认支持`@EventListener`
+
+可自定义`ConnectionEventPublisherFactory`注入容器生效
+
+### 事件监听器
+
+`ConnectionEventListener`用于监听事件
+
+# 事件
+
+|事件|说明|
+|-|-|
+|`ConnectionLoadBalanceConceptInitializeEvent`|`ConnectionLoadBalanceConcept`初始化|
+|`ConnectionLoadBalanceConceptDestroyEvent`|`ConnectionLoadBalanceConcept`销毁|
+|`ConnectionEstablishEvent`|连接建立|
+|`ConnectionCloseEvent`|连接关闭|
+|`ConnectionCloseErrorEvent`|连接关闭异常|
+|`ConnectionErrorEvent`|连接异常|
+|`ConnectionSubscribeErrorEvent`|连接订阅异常|
+|`MessagePrepareEvent`|消息准备|
+|`MessageSendEvent`|消息发送|
+|`MessageSendSuccessEvent`|消息发送成功|
+|`MessageSendErrorEvent`|消息发送异常|
+|`DeadMessageEvent`|当一个消息不会发送给任何一个连接|
+|`MessageDecodeErrorEvent`|消息解码异常|
+|`MessageForwardEvent`|消息转发|
+|`MessageForwardErrorEvent`|消息转发异常|
+|`MessageReceiveEvent`|消息接收|
+|`MessageDiscardEvent`|消息丢弃|
+|`MasterSlaveSwitchEvent`|主从切换|
+|`MasterSlaveSwitchErrorEvent`|主从切换异常|
+|`HeartbeatTimeoutEvent`|心跳超时|
+|`EventPublishErrorEvent`|事件发布异常|
+|`LoadBalanceMonitorEvent`|监控触发|
+|`UnknownCloseEvent`|未知的连接关闭|
+|`UnknownErrorEvent`|未知的连接异常|
+|`UnknownMessageEvent`|未知的消息|
+
+# 默认服务端点配置
+
+可以自定义`DefaultEndpointCustomizer`来配置
+
+`Servlet`环境下会回调`WebSocketHandlerRegistration`
+
+`Reactive`环境下会回调`ReactiveWebSocketServerHandlerMapping`
