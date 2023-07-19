@@ -167,7 +167,7 @@ concept:
 concept:
   netty:
     load-balance:
-      subscriber-master: websocket #主订阅者器，默认 websocket
+      subscriber-master: none #主订阅者器，默认无
       subscriber-slave: none #从订阅器，默认无
 ```
 
@@ -175,8 +175,6 @@ concept:
 
 |配置|说明|
 |-|-|
-|websocket|每个服务实例ws双向连接，只能配置为主订阅器，且不支持主从切换|
-|websocket_ssl|每个服务实例wss双向连接，只能配置为主订阅器，且不支持主从切换|
 |kafka_topic|kafka转发|
 |rabbit_fanout|rabbit转发|
 |redis_topic|redis发布订阅|
