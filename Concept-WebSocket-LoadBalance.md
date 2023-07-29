@@ -12,6 +12,8 @@
 
 本库同时兼容`Web`和`Webflux`，使用方式上没有任何区别
 
+# [2.x.x 版本请看该文档](./Concept-WebSocket-LoadBalance-2)
+
 # 集成
 
 ```gradle
