@@ -89,6 +89,7 @@ concept:
     server: #服务配置
       default-endpoint: #默认端点
         enabled: true #是否启用默认端点，默认true
+        prefix: concept-websocket #前缀，默认'/concept-websocket/'
         path-selector: #Path选择器
           enabled: false #是否启用Path选择器，默认false
         user-selector: #User选择器
