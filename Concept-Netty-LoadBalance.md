@@ -46,7 +46,7 @@ public class NettyServiceApplication {
 public class NettySampleServer {
 
     @Autowired
-    private final NettyLoadBalanceConcept concept;
+    private NettyLoadBalanceConcept concept;
 
     public void start(int port) {
         EventLoopGroup boss = new NioEventLoopGroup(1);
