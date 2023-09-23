@@ -66,6 +66,8 @@ public Mono<Void> http() {
 
 ```gradle
 implementation 'com.github.linyuzai:concept-download-spring-boot-starter:1.2.2'
+
+implementation 'org.springframework.boot:spring-boot-starter-aop'
 ```
 
 ```xml
@@ -73,6 +75,11 @@ implementation 'com.github.linyuzai:concept-download-spring-boot-starter:1.2.2'
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-download-spring-boot-starter</artifactId>
   <version>1.2.2</version>
+</dependency>
+
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-aop</artifactId>
 </dependency>
 ```
 
