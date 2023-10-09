@@ -239,7 +239,7 @@ public class WsController {
 
 其中`userId`为固定参数名
 
-在配置中启用路径选择器
+在配置中启用用户选择器
 
 ```yaml
 concept:
@@ -442,3 +442,9 @@ public class WsController {
 ### 2.1.0 
 
 - 关闭原因兼容不同类型
+
+### 2.2.0
+
+- 支持二进制数据转发
+- 提供`PooledMessage`提升编码性能
+- `Servlet`方式解决`javax`和`jakarta`兼容问题
