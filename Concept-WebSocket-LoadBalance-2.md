@@ -25,7 +25,7 @@
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:2.2.0'
+implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:2.3.0'
 
 implementation 'org.springframework.boot:spring-boot-starter-websocket'//webmvc需要添加websocket依赖，webflux不需要
 ```
@@ -34,7 +34,7 @@ implementation 'org.springframework.boot:spring-boot-starter-websocket'//webmvc�
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-websocket-loadbalance-spring-boot-starter</artifactId>
-  <version>2.2.0</version>
+  <version>2.3.0</version>
 </dependency>
 
 <!--webmvc需要添加websocket依赖，webflux不需要-->
@@ -465,3 +465,7 @@ concept.send(pooled);
 - 支持二进制数据转发
 - 提供`PooledMessage`提升编码性能
 - `Servlet`方式解决`javax`和`jakarta`兼容问题
+
+### 2.3.0
+
+- SpringBoot3 RabbitEndpoint 兼容问题
