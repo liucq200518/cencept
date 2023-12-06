@@ -22,10 +22,14 @@
 
 3. 提供发送重试配置（不过还是推荐使用自带的重试如`Kafka/RabbitMQ`）
 
+# 最新版本
+
+![Maven Central](https://img.shields.io/maven-central/v/com.github.linyuzai/concept-websocket-loadbalance-spring-boot-starter)
+
 # 集成
 
 ```gradle
-implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:2.3.2'
+implementation 'com.github.linyuzai:concept-websocket-loadbalance-spring-boot-starter:${version}'
 
 implementation 'org.springframework.boot:spring-boot-starter-websocket'//webmvc需要添加websocket依赖，webflux不需要
 ```
@@ -34,7 +38,7 @@ implementation 'org.springframework.boot:spring-boot-starter-websocket'//webmvc�
 <dependency>
   <groupId>com.github.linyuzai</groupId>
   <artifactId>concept-websocket-loadbalance-spring-boot-starter</artifactId>
-  <version>2.3.2</version>
+  <version>${version}</version>
 </dependency>
 
 <!--webmvc需要添加websocket依赖，webflux不需要-->
@@ -469,3 +473,7 @@ concept.send(pooled);
 ### 2.3.0
 
 - SpringBoot3 RabbitEndpoint 兼容问题
+
+### 2.3.3
+
+- 发送对象消息转发变成空字符串的问题
