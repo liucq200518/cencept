@@ -64,7 +64,7 @@ public List<Object> list() {
 
 # 2.x.x 新版本
 
-注意事项：2.x.x版本与1.x.x版本不兼容
+注意事项：2.x.x 版本与1.x.x 版本不兼容
 
 1. 【结构优化】移除对`aop`的强依赖，使用`@ControllerAdvice`代替，注解移动到`com.github.linyuzai.download.core.annotation`下
 
