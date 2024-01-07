@@ -488,8 +488,6 @@ public interface SourceFactory {
 
 每个`Source`都可以单独指定`asyncLoad`属性来控制是否需要异步加载，目前`HttpSource`和`OkHttpSource`默认为`true`，其他默认都为`false`
 
-注意`webflux`本身就是非阻塞的，具有天然的并发优势，并且不兼容其他两种阻塞式的`SourceLoader`
-
 通过手动注入来切换不同的加载方式
 
 ### 自定义加载方式
@@ -544,7 +542,7 @@ public String[] sourceCache() {
 
 使用`@SourceCache`注解配合`@Download`实现下载资源的缓存处理，优先级高于上面两种方式
 
-##### `@SourceCache`注解说明
+##### @SourceCache 注解说明
 
 | 参数 | 说明 |
 |-|-|
@@ -634,7 +632,7 @@ public String[] compressCache() {
 
 使用`@CompressCache`注解配合`@Download`实现压缩文件的缓存处理，优先级高于上面两种方式
 
-##### `@CompressCache`注解说明
+##### @CompressCache 注解说明
 
 | 参数 | 说明 |
 |-|-|
