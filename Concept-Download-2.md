@@ -128,7 +128,7 @@ public class ConceptDownloadConfig {
 
 ```
 
-# `@Download` 注解说明
+# @Download 注解说明
 
 | 参数 | 说明 |
 |-|-|
@@ -172,6 +172,7 @@ public DownloadOptions.Configurer rewrite() {
 
 ### 异步消费
 
+```java
 @Download
 @GetMapping("/async")
 public DownloadOptions.Configurer async() {
